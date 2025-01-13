@@ -1,69 +1,88 @@
 import sys
 from lib.misc import log
-from PySide6.QtCore import Qt, Slot, Signal
+from PySide6.QtCore import Qt, Slot
 import PySide6.QtWidgets as qw
 
-
-class mainWindow(qw.QWidget):
+class MainWindow(qw.QWidget):
     def __init__(self):
-        qw.QWidget.__init__(self)
+        super().__init__()
         self.setWindowTitle("Doordash bot - Leo :)")
-        self.resize(300,300)
+        self.resize(300, 300)
 
+        # Main layout and stacked widget
+        self.layout = qw.QVBoxLayout(self)
+        self.stackedWidget = qw.QStackedWidget()
+        self.layout.addWidget(self.stackedWidget)
+
+        # Adding pages to stacked widget
+        self.mainPage = self.createMainPage()
+        self.getOrdersPage = self.createGetOrdersPage()
+
+        self.stackedWidget.addWidget(self.mainPage)
+        self.stackedWidget.addWidget(self.getOrdersPage)
+
+        log("GUI open")
+
+    def createMainPage(self):
+        page = qw.QWidget()
+        layout = qw.QVBoxLayout(page)
+
+        # Buttons
         self.getButton = qw.QPushButton("get orders")
         self.viewButton = qw.QPushButton("view basic data")
         self.exportButton = qw.QPushButton("export data")
         self.settingsButton = qw.QPushButton("settings")
         self.updateButton = qw.QPushButton("update")
 
-        self.message = qw.QLabel("if this ever breaks or is missing a feature, feel free to tell me!")
-        self.message.setAlignment(Qt.AlignBottom | Qt.AlignCenter)
+        # Message
+        message = qw.QLabel("If this ever breaks or is missing a feature, feel free to tell me!")
+        message.setAlignment(Qt.AlignBottom | Qt.AlignCenter)
 
-        self.layout = qw.QVBoxLayout(self)
-        self.layout.addWidget(self.getButton)
-        self.layout.addWidget(self.viewButton)
-        self.layout.addWidget(self.exportButton)
-        self.layout.addWidget(self.settingsButton)
-        self.layout.addWidget(self.updateButton)
-        self.layout.addWidget(self.message)
+        # Add widgets to layout
+        layout.addWidget(self.getButton)
+        layout.addWidget(self.viewButton)
+        layout.addWidget(self.exportButton)
+        layout.addWidget(self.settingsButton)
+        layout.addWidget(self.updateButton)
+        layout.addWidget(message)
 
-        # Connecting the signal
-        self.getButton.clicked.connect(self.openGetOrders)
+        # Connect button signal
+        self.getButton.clicked.connect(self.showGetOrdersPage)
 
-        log("gui open")
-    
+        return page
+
+    def createGetOrdersPage(self):
+        page = qw.QWidget()
+        layout = qw.QVBoxLayout(page)
+
+        # Message
+        message = qw.QLabel("get orders page")
+        message.setAlignment(Qt.AlignCenter)
+        layout.addWidget(message)
+
+        # Back and Get buttons at the bottom
+        buttonLayout = qw.QHBoxLayout()
+        backButton = qw.QPushButton("Back")
+        backButton.clicked.connect(self.showMainPage)
+        getButton = qw.QPushButton("Get")
+        # Connect signals for getButton as needed, e.g., getButton.clicked.connect(some_function)
+
+        buttonLayout.addWidget(backButton)
+        buttonLayout.addWidget(getButton)
+        layout.addLayout(buttonLayout)
+
+        return page
+
     @Slot()
-    def openGetOrders(self):
-        self.setEnabled(False) #gray out main window
-        self.orders_window = getOrdersWindow() #make new window
-        self.orders_window.closed.connect(self.reEnable) #make main window un gray after
-        self.orders_window.show() #show main window
-
-    def reEnable(self): #re enable main window
-        self.setEnabled(True)
-
-class getOrdersWindow(qw.QWidget):
-    closed = Signal()
-    def __init__(self):
-        qw.QWidget.__init__(self)
-        self.setWindowTitle("get orders")
-        self.resize(300,300)
-
-        self.message = qw.QLabel("test :)")
-        self.message.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.layout = qw.QVBoxLayout(self)
-        self.layout.addWidget(self.message)
-        
-    def closeEvent(self, event):
-        self.closed.emit()
-        super().closeEvent(event)
+    def showGetOrdersPage(self): self.stackedWidget.setCurrentWidget(self.getOrdersPage)
+    @Slot()
+    def showMainPage(self): self.stackedWidget.setCurrentWidget(self.mainPage)
 
 def run():
-    log("starting gui...")
+    log("Starting GUI...")
     app = qw.QApplication(sys.argv)
 
-    window = mainWindow()
+    window = MainWindow()
     window.show()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
