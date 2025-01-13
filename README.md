@@ -1,4 +1,5 @@
 # DoordashOrderScraper
+## NOTE: not finished! still programming most of the features outside of basic functionality!
 to collect how much money each person has spend on doordash group orders over a set amount of time.
 
 ## instalation
