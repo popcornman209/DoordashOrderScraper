@@ -29,8 +29,8 @@ python main.py
 if you do not want to use the gui, see the arguments below for how to run this in a tty as a headless script.
 
 ### program arguments
-`--help` is for bringing up the help page, obviously lol
-`--headless` will run the program in a headless configuration, fully in a tty.
+`--help` is for bringing up the help page, obviously lol<br>
+`--headless` will run the program in a headless configuration, fully in a tty.<br>
 `--days x` will make the script get orders x days in the past. this is needed if tryng to run the script automatically, as otherwise it will try and get an input of which orders to count.
 
 ## configs
