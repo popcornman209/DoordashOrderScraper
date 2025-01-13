@@ -17,10 +17,10 @@ class cookies:
                 del cookie["domain"]
             driver.add_cookie(cookie)
 
-def selectOrders(headless, days, loadMoreMethod):
+def selectOrders(headless, days, orders, loadMoreMethod):
     if days == -1:
         if headless:
-            print(("\033c\033[3J" if headless else "\n")+"orders:") 
+            print("\n\norders:") 
             for i in range(len(orders)-1): print("{}: {}, {} ({})".format(i+1,orders[i]["name"],orders[i]["info"],orders[i]["link"])) #prints orders
             usedOrders = input('\nwhich orders would you like to count? (seperated by ",", or type "load" to load more)\n: ') #gets list of orders
             if usedOrders == "load": loadMoreMethod(driver) #load more

@@ -30,7 +30,7 @@ def main(headless,browserHeadless,days): #days -1 will ask the user, should be d
 
         orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
 
-        selecting, selectedOrders = misc.selectOrders(headless,days,wpage.historyPage.loadMore)
+        selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore)
     
     log("orders:")
     for order in selectedOrders: print(order["link"].replace("https://www.doordash.com/orders/","")) #print orders
@@ -51,7 +51,7 @@ def main(headless,browserHeadless,days): #days -1 will ask the user, should be d
             if person not in totalSpending: totalSpending[person] = spending[person] #add them to the totals if they arent there
             else: totalSpending[person] += spending[person] #add to the persons total if they are there
 
-    print(("\033c\033[3J" if headless else "\n")+"final spending:")
+    print("\n\nfinal spending:")
     for person in totalSpending: print("{}: {}".format(person,"{:.2f}".format(totalSpending[person]))) #print total spending to console
 
     return totalSpending, spendingDetailed #return values
