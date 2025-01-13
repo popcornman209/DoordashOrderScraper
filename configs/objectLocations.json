@@ -1,0 +1,22 @@
+{
+    "historyPage":{
+        "ordersList": "/html/body/div[1]/div[1]/div[2]/main/main/div[3]/div[2]/div[1]",
+        "receiptLocal": "./div/div/div/span[2]/div/div/div[1]/div[2]/a",
+        "loadMore": "/html/body/div[1]/div[1]/div[2]/main/main/div[3]/div[2]/div[2]/button",
+        "nameContainerLocal": "./div/div/div/span[1]/div/a/div/div",
+        "informationLocal": "./div/div/div/span[2]/div/div/div[1]/div[1]/span[1]"
+    },
+    "receipt":{
+        "ordersContainer": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div/div[4]/div[2]/div",
+        "nameLocal": "./div[1]/span",
+        "priceLocal": "./div[2]/div[1]/div/div/span[2]"
+    },
+    "login":{
+        "email": "//*[@id=\"FieldWrapper-0\"]",
+        "signIn": "//*[@id=\"guided-submit-button\"]",
+        "passInstead": "//*[@id=\"otc-submit-form\"]/button[2]",
+        "passwordWithInstead": "//*[@id=\"FieldWrapper-8\"]",
+        "passwordNoInstead": "//*[@id=\"FieldWrapper-2\"]",
+        "signInFinal": "//*[@id=\"login-submit-button\"]"
+    }
+}
