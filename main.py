@@ -1,5 +1,4 @@
-import sys, lib.gui
-import lib.mainScript as mScript
+import sys
 
 args = sys.argv
 
@@ -15,6 +14,8 @@ else:
 
     if "--headless" in args:
         print("running in headless mode!")
+        import lib.mainScript as mScript
         mScript.main(True,True,days)
     else:
+        import lib.gui
         lib.gui.run()

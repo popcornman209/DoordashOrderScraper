@@ -30,23 +30,7 @@ def main(headless,browserHeadless,days): #days -1 will ask the user, should be d
 
         orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
 
-        if days == -1:
-            if headless:
-                print(("\033c\033[3J" if headless else "\n")+"orders:") 
-                for i in range(len(orders)-1): print("{}: {}, {} ({})".format(i+1,orders[i]["name"],orders[i]["info"],orders[i]["link"])) #prints orders
-                usedOrders = input('\nwhich orders would you like to count? (seperated by ",", or type "load" to load more)\n: ') #gets list of orders
-                if usedOrders == "load": wpage.historyPage.loadMore(driver) #load more
-                else:
-                    selectedOrders = []
-                    for order in usedOrders.split(","): #get all selected orders
-                        selectedOrders.append(orders[int(order)-1]) #add them to the list
-                    selecting = False #exit loop
-            else:
-                selectedOrders = orders[:4] # TEMP
-                selecting = False
-        else:
-            selectedOrders = orders[:4] # TEMP
-            selecting = False
+        selecting, selectedOrders = misc.selectOrders(headless,days,wpage.historyPage.loadMore)
     
     log("orders:")
     for order in selectedOrders: print(order["link"].replace("https://www.doordash.com/orders/","")) #print orders
