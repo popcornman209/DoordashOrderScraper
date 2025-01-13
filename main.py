@@ -15,6 +15,6 @@ else:
 
     if "--headless" in args:
         print("running in headless mode!")
-        mScript.main(True,days)
+        mScript.main(True,True,days)
     else:
         lib.gui.run()
