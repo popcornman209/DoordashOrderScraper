@@ -12,8 +12,8 @@ with open("configs/loginInfo.json","r") as f: #loads xpaths and classes
 
 log = misc.log #logging method
 
-def main(headless,days): #days -1 will ask the user, should be defualt. headless means no gui
-    driver = Driver(uc=True, headless=headless) #main driver, the browser itself
+def main(headless,browserHeadless,days): #days -1 will ask the user, should be defualt. headless means no gui
+    driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
 
@@ -32,7 +32,7 @@ def main(headless,days): #days -1 will ask the user, should be defualt. headless
 
         if days == -1:
             if headless:
-                print("\033c\033[3Jorders:") 
+                print(("\033c\033[3J" if headless else "\n")+"orders:") 
                 for i in range(len(orders)-1): print("{}: {}, {} ({})".format(i+1,orders[i]["name"],orders[i]["info"],orders[i]["link"])) #prints orders
                 usedOrders = input('\nwhich orders would you like to count? (seperated by ",", or type "load" to load more)\n: ') #gets list of orders
                 if usedOrders == "load": wpage.historyPage.loadMore(driver) #load more
@@ -52,6 +52,7 @@ def main(headless,days): #days -1 will ask the user, should be defualt. headless
     for order in selectedOrders: print(order["link"].replace("https://www.doordash.com/orders/","")) #print orders
 
     totalSpending = {}
+    spendingDetailed = {}
     for order in selectedOrders: #loop through all orders
         driver.get(order["link"]) #load page
         driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainer"]) #wait for receipt to load
@@ -59,10 +60,14 @@ def main(headless,days): #days -1 will ask the user, should be defualt. headless
         time.sleep(.5) #wait
 
         spending = wpage.receiptPage.getSpending(driver) #gets spending of eadch person on the current order
+
+        spendingDetailed[order["link"]] = spending
+
         for person in spending: #for each person
             if person not in totalSpending: totalSpending[person] = spending[person] #add them to the totals if they arent there
             else: totalSpending[person] += spending[person] #add to the persons total if they are there
 
-    print("\033c\033[3Jfinal spending:")
+    print(("\033c\033[3J" if headless else "\n")+"final spending:")
     for person in totalSpending: print("{}: {}".format(person,"{:.2f}".format(totalSpending[person]))) #print total spending to console
-    return totalSpending #return values
+
+    return totalSpending, spendingDetailed #return values

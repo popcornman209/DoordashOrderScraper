@@ -1,29 +1,41 @@
 import sys
 from lib.misc import log
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
-                               QVBoxLayout, QWidget)
+import PySide6.QtWidgets as qw
 
 
-class mainWindow(QWidget):
+class mainWindow(qw.QWidget):
     def __init__(self):
-        QWidget.__init__(self)
+        qw.QWidget.__init__(self)
+        self.setWindowTitle("Doordash bot - Leo :)")
+        self.resize(300,300)
 
-        self.button = QPushButton("Click me!")
-        self.message = QLabel("Hello World")
-        self.message.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.getButton = qw.QPushButton("get orders")
+        self.viewButton = qw.QPushButton("view basic data")
+        self.exportButton = qw.QPushButton("export data")
+        self.settingsButton = qw.QPushButton("settings")
+        self.updateButton = qw.QPushButton("update")
 
-        self.layout = QVBoxLayout(self)
+        self.message = qw.QLabel("if this ever breaks or is missing a feature, feel free to tell me!")
+        self.message.setAlignment(Qt.AlignBottom | Qt.AlignCenter)
+
+        self.layout = qw.QVBoxLayout(self)
+        self.layout.addWidget(self.getButton)
+        self.layout.addWidget(self.viewButton)
+        self.layout.addWidget(self.exportButton)
+        self.layout.addWidget(self.settingsButton)
+        self.layout.addWidget(self.updateButton)
         self.layout.addWidget(self.message)
-        self.layout.addWidget(self.button)
 
         # Connecting the signal
-        self.button.clicked.connect(sys.exit)
+        #self.button.clicked.connect(sys.exit)
+
+        log("gui open")
 
 
 def run():
     log("starting gui...")
-    app = QApplication(sys.argv)
+    app = qw.QApplication(sys.argv)
 
     window = mainWindow()
     window.show()
