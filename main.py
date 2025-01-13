@@ -9,7 +9,7 @@ if "--help" in args:
 else:
     days = -1
     if "--days" in args:
-        days = args[args.index("--days")+1]
+        days = int(args[args.index("--days")+1])
         print("loading {} days".format(days))
 
     if "--headless" in args:
