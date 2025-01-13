@@ -6,10 +6,10 @@ args = sys.argv
 print("\033c\033[3J\033[95m--DoorDash order bot--\nby Leo :)")
 
 if "--help" in args:
-    print("-d: sets amount of days to check in the past, if not provided you will be asked\n--headless: runs in headless mode, fully in tty\n--help: this page :)")
+    print("--days: sets amount of days to check in the past, if not provided you will be asked\n--headless: runs in headless mode, fully in tty\n--help: this page :)")
 else:
-    if "-d" in args:
-        days = args[args.index("-d")+1]
+    if "--days" in args:
+        days = args[args.index("--days")+1]
         print("loading {} days".format(days))
 
     if "--headless" in args:
