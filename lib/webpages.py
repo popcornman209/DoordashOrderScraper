@@ -29,12 +29,8 @@ class accounts:
             driver.find_element("xpath",objectLocations["login"]["passwordNoInstead"]).send_keys(passwd)  #type in said field
         log("typed pass")
         
-
         time.sleep(0.25)
-        try:
-            driver.find_element("xpath",objectLocations["login"]["signInFinal"]).click() #click sign in button
-        except Exception as e:
-            raise RuntimeError("failed to login! (could be caused by 2 factor authentication being enabled)")
+        driver.find_element("xpath",objectLocations["login"]["signInFinal"]).click() #click sign in button
         log("pressed sign in button")
     
     def login(driver,autoLogin,usr,passw):

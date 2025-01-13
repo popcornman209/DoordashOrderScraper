@@ -1,6 +1,6 @@
 import sys
 from lib.misc import log
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt, Slot, Signal
 import PySide6.QtWidgets as qw
 
 
@@ -28,10 +28,36 @@ class mainWindow(qw.QWidget):
         self.layout.addWidget(self.message)
 
         # Connecting the signal
+        self.getButton.clicked.connect(self.openGetOrders)
+
+        log("gui open")
+    
+    @Slot()
+    def openGetOrders(self):
+        self.setEnabled(False)
+        self.ordersWindow = getOrdersWindow()
+        self.ordersWindow.show()
+
+class getOrdersWindow(qw.QWidget):
+    closed = Signal()
+    def __init__(self):
+        qw.QWidget.__init__(self)
+        self.setWindowTitle("get orders")
+        self.resize(300,300)
+
+        self.message = qw.QLabel("test :)")
+        self.message.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.layout = qw.QVBoxLayout(self)
+        self.layout.addWidget(self.message)
+
+        # Connecting the signal
         #self.button.clicked.connect(sys.exit)
 
         log("gui open")
-
+    def closeEvent(self, event):
+        self.closed.emit()
+        super().closeEvent(event)
 
 def run():
     log("starting gui...")
