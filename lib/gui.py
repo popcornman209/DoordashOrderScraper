@@ -34,9 +34,13 @@ class mainWindow(qw.QWidget):
     
     @Slot()
     def openGetOrders(self):
-        self.setEnabled(False)
-        self.ordersWindow = getOrdersWindow()
-        self.ordersWindow.show()
+        self.setEnabled(False) #gray out main window
+        self.orders_window = getOrdersWindow() #make new window
+        self.orders_window.closed.connect(self.reEnable) #make main window un gray after
+        self.orders_window.show() #show main window
+
+    def reEnable(self): #re enable main window
+        self.setEnabled(True)
 
 class getOrdersWindow(qw.QWidget):
     closed = Signal()
@@ -50,11 +54,7 @@ class getOrdersWindow(qw.QWidget):
 
         self.layout = qw.QVBoxLayout(self)
         self.layout.addWidget(self.message)
-
-        # Connecting the signal
-        #self.button.clicked.connect(sys.exit)
-
-        log("gui open")
+        
     def closeEvent(self, event):
         self.closed.emit()
         super().closeEvent(event)
