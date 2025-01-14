@@ -28,9 +28,11 @@ class viewBasic(BasePage):
                 data = json.load(f)
             self.topText.setText("last ran: {}".format(data["lastRan"]))
             self.list_widget.clear()
-            items = ["{}:  ${}".format(person,data["spendings"][person]) for person in data["spendings"]]
+            items = ["{}:  ${}".format(person,round(data["spendings"][person],2)) for person in data["spendings"]]
             self.list_widget.addItems(items)
             self.show()
+        else:
+            self.dispMessageMethod("no data saved!",self.on_back)
 
 class export(BasePage):
     def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable):
