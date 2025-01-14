@@ -7,9 +7,11 @@ templateLoginJson = {
     "DDusername": "",
     "DDpassword": ""
 }
-if "loginInfo.json" not in os.listdir("configs/"):
+if not os.path.exists("configs/loginInfo.json"):
     with open("configs/loginInfo.json","w") as f: #loads xpaths and classes
         json.dump(templateLoginJson,f)
+if not os.path.exists("data/"):
+    os.mkdir("data")
 
 print("\033c\033[3J\033[95m--DoorDash order bot--\nby Leo :)\033[0m")
 

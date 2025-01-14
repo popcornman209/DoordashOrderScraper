@@ -58,11 +58,11 @@ class basicMessage(BasePage):
             self.bottomMessage.setVisible(False)
             self.continueButton.clicked.connect(method)
             self.buttonMethod = method
-            log("showed basic button menu")
+            log('showed basic button menu "{}"'.format(text))
         else:
             self.continueButton.setVisible(False)
             self.bottomMessage.setVisible(True)
-            log("showed basic menu")
+            log('showed basic menu "{}"'.format(text))
         self.show()
 
 class OrdersPage(BasePage):
