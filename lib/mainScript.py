@@ -13,17 +13,17 @@ with open("configs/loginInfo.json","r") as f:
 
 log = misc.log #logging method
 
-def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None, selectOrdersMethod=None): #days -1 will ask the user, should be defualt. headless means no gui
-    displayMessageMethod("opening browser...")
+def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None, selectOrdersMethod=None, getOrdersMethod=None): #days -1 will ask the user, should be defualt. headless means no gui
+    if displayMessageMethod: displayMessageMethod("opening browser...")
     driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
 
     if "identity" in driver.current_url: #if not logged in
-        displayMessageMethod("logging in...")
+        if displayMessageMethod: displayMessageMethod("logging in...")
         wpage.accounts.login(driver,accountInfo["autoLogin"],accountInfo["DDusername"],accountInfo["DDpassword"]) #log in
 
-    displayMessageMethod("waiting for page to load...")
+    if displayMessageMethod: displayMessageMethod("waiting for page to load...")
     driver.wait_for_element("xpath",objectLocations["historyPage"]["ordersList"]) #wait for orders list page to show up
 
     selecting = True
@@ -34,9 +34,10 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
 
         if orders:
-            selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver, selectOrdersMethod) #get selected orders
+            selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver, selectOrdersMethod, getOrdersMethod) #get selected orders
         else:
-            displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
+            if displayMessageMethod: displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
+            else: print("script failed!no orders found, or thereis an order on the way")
             driver.quit()
             return
     
@@ -47,7 +48,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     spendingDetailed = {}
     i = 1
     for order in selectedOrders: #loop through all orders
-        displayMessageMethod("loading receipt {}/{}".format(i,len(selectedOrders)))
+        if displayMessageMethod: displayMessageMethod("loading receipt {}/{}".format(i,len(selectedOrders)))
         driver.get(order["link"]) #load page
         driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainer"]) #wait for receipt to load
         log("receipt {} loaded".format(order["link"].replace("https://www.doordash.com/orders/","")))

@@ -50,11 +50,13 @@ class MainWindow(QWidget):
         self.basic_message_page = basicMessage(self.stacked_widget)
 
         self.selectOrdersPage = ordPage.orderSelector(self.stacked_widget)
-        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage, self.selectOrdersPage.get)
+        self.selectOrdersPage.displays = self.displays
+        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage, self.selectOrdersPage)
         self.basicDataPage = dataGui.viewBasic(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
 
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.main_page.page)
+        self.stacked_widget.addWidget(self.selectOrdersPage.page)
         self.stacked_widget.addWidget(self.orders_page.page)
         self.stacked_widget.addWidget(self.basic_message_page.page)
         self.stacked_widget.addWidget(self.basicDataPage.page)
@@ -64,6 +66,7 @@ class MainWindow(QWidget):
     def showMainPage(self): self.main_page.show()
     def showOrdersPage(self): self.orders_page.show()
     def showBasicData(self): self.basicDataPage.display()
+    def displays(self,orders): self.selectOrdersPage.display(orders)
 
 
 def run():

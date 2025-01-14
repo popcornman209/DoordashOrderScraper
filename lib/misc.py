@@ -1,4 +1,4 @@
-import pickle
+import pickle, time
 from datetime import datetime, timedelta
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QLabel, QPushButton
@@ -81,7 +81,7 @@ def isDateInRange(date_str, days):
 
     return past_date <= date_obj <= current_date # Check if the date is within the last x days
 
-def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMethod):
+def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMethod, getOrdersMethod):
     if days == -1:
         if headless:
             print("\n\norders:") 
@@ -96,7 +96,13 @@ def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMet
                     selectedOrders.append(orders[int(order)-1]) #add them to the list
                 return False, selectedOrders
         else:
-            loadMore, selected = selectOrdersMethod(orders)
+            selectOrdersMethod(orders)
+            selecting = True
+            while selecting:
+                selecting, loadMore, selectedOrders = getOrdersMethod()
+                time.sleep(0.01)
+            if loadMore: loadMoreMethod(driver) 
+            return loadMore,selectedOrders
     else:
         if isDateInRange(getDate(orders[-1]),days):
             loadMoreMethod(driver)
