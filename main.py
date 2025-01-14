@@ -1,6 +1,15 @@
-import sys
+import sys,os, json
 
 args = sys.argv
+
+templateLoginJson = {
+    "autoLogin": True,
+    "DDusername": "",
+    "DDpassword": ""
+}
+if "loginInfo" not in os.listdir("configs/"):
+    with open("configs/loginInfo.json","w") as f: #loads xpaths and classes
+        json.dump(templateLoginJson,f)
 
 print("\033c\033[3J\033[95m--DoorDash order bot--\nby Leo :)\033[0m")
 

@@ -2,3 +2,4 @@ venv/
 downloaded_files/
 __pycache__/
 lib/__pycache__
+configs/loginInfo.json

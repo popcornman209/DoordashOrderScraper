@@ -6,7 +6,7 @@ import lib.webpages as wpage
 with open("configs/objectLocations.json","r") as f: #loads xpaths and classes
     objectLocations = json.load(f)
 
-with open("configs/loginInfo.json","r") as f: #loads xpaths and classes
+with open("configs/loginInfo.json","r") as f:
     accountInfoAuto = json.load(f)
 
 
