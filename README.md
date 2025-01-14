@@ -39,6 +39,6 @@ if you do not want to use the gui, see the arguments below for how to run this i
 you will be able to edit these settings in the gui, but without that you can do it manually.
 
 ### configs/loginInfo.json
-this is fairly self explanatory, setting "autoLogin" to manual will just ask you to press enter once you log in. however setting it to "automatic" will type in your username and password for you. this is needed to run the headless version. if i ever get around to it, im planning on adding a "cookie" option too which will save/load your cookies. this will stop the "new login attempt" messages once youve already logged in the first time.
+this is fairly self explanatory, setting "autoLogin" to true will automatically log in, otherwise it will wait until you do so yourself.
 
-setting DDusername and DDpassword is for your doordash username and password, 2 factor authentication has not been programmed in, so you will must turn this off.
+setting DDusername and DDpassword is for your doordash username and password, 2 factor authentication has not been programmed in, so you will must turn that off.
