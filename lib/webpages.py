@@ -78,7 +78,7 @@ class receiptPage:
         spending = {}
         for order in orders:
             person = order.find_element("xpath", objectLocations["receipt"]["nameLocal"]).text #gets person
-            price = float(order.find_element("xpath", objectLocations["receipt"]["priceLocal"]).text[1:]) #gets how much they spent
+            price = round(float(order.find_element("xpath", objectLocations["receipt"]["priceLocal"]).text[1:]),2) #gets how much they spent
             if person not in spending: spending[person] = price #adds them to the list if they arent already
             else: spending[person] += price #if they are there then add to their total (not sure why i added this?)
         return spending

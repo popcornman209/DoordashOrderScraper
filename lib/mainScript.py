@@ -33,7 +33,12 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
 
         orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
 
-        selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver) #get selected orders
+        if orders:
+            selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver) #get selected orders
+        else:
+            displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
+            driver.quit()
+            return
     
     log("orders:")
     for order in selectedOrders: print(order["link"].replace("https://www.doordash.com/orders/","")) #print orders
