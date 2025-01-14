@@ -7,7 +7,7 @@ templateLoginJson = {
     "DDusername": "",
     "DDpassword": ""
 }
-if "loginInfo" not in os.listdir("configs/"):
+if "loginInfo.json" not in os.listdir("configs/"):
     with open("configs/loginInfo.json","w") as f: #loads xpaths and classes
         json.dump(templateLoginJson,f)
 
