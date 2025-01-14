@@ -30,7 +30,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfo): #days -1 will a
 
         orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
 
-        selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore)
+        selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver) #get selected orders
     
     log("orders:")
     for order in selectedOrders: print(order["link"].replace("https://www.doordash.com/orders/","")) #print orders

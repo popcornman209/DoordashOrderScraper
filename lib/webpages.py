@@ -35,12 +35,10 @@ class accounts:
     
     def login(driver,autoLogin,usr,passw):
         log("reached login window...")
-        if autoLogin == "automatic": #if fill in email and password automatically
+        if autoLogin: #if fill in email and password automatically
             accounts.auioLogin(driver,usr,passw)
-        elif autoLogin == "manual": #if not fill in email automatically
+        else: #if not fill in email automatically
             input("press enter when logged in and on orders page")
-        else:
-            raise ValueError("autoLogin can only be manual, or automatic!")
 
 class historyPage:
     def getOrders(driver):
@@ -66,6 +64,7 @@ class historyPage:
         return links
 
     def loadMore(driver):
+        log("loaded more history")
         loadMoreButton = driver.find_element("xpath", objectLocations["historyPage"]["loadMore"])
         loadMoreButton.click()
 
