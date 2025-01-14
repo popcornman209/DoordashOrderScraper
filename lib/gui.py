@@ -48,15 +48,13 @@ class MainWindow(QWidget):
         # Initialize pages
         self.main_page = MainPage(self.stacked_widget, self.showOrdersPage)
         self.basic_message_page = ordPage.basicMessage(self.stacked_widget)
-        self.complete_page = ordPage.completeMessage(self.stacked_widget, self.showMainPage)
 
-        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage,self.basic_message_page.dispMessage,self.complete_page.show)
+        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage,self.basic_message_page.dispMessage)
 
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.main_page.page)
         self.stacked_widget.addWidget(self.orders_page.page)
         self.stacked_widget.addWidget(self.basic_message_page.page)
-        self.stacked_widget.addWidget(self.complete_page.page)
 
         log("GUI open")
 

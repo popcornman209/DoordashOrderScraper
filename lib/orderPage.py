@@ -7,7 +7,7 @@ with open("configs/loginInfo.json","r") as f:
     accountInfo = json.load(f)
 
 class mainScriptWorker(QThread):
-    update_message_signal = Signal(str)  # Signal to update the message
+    update_message_signal = Signal(tuple)  # Signal to update the message
     finished_signal = Signal()
 
     def __init__(self, orderWindow):
@@ -24,53 +24,55 @@ class mainScriptWorker(QThread):
             "DDpassword": self.orderWindow.widgets["passField"].text()
         }
 
-        mScript.main(False, bHeadless, days, accountInfo=accInfo, displayMessageMethod=self.on_message_update, savePath="data/output.json")
+        mScript.main(False, bHeadless, days, accountInfo=accInfo, displayMessageMethod=self.on_message_update, savePath="data/output.json",mainPageMethod=self.orderWindow.on_back)
         self.finished_signal.emit()
     
-    def on_message_update(self, message):
-        self.update_message_signal.emit(message)
-
-class completeMessage(BasePage):
-    def __init__(self, container_widget: QStackedWidget, on_back: callable):
-        super().__init__(container_widget)
-
-        self.layout = QVBoxLayout(self.page)
-
-        self.message = QLabel("script complete!\noutput saved.")
-        self.message.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.message)
-
-        self.layout.addStretch()
-        self.continueButton = QPushButton("continue")
-        self.continueButton.clicked.connect(on_back)
-        self.layout.addWidget(self.continueButton)
+    def on_message_update(self, message, method=None):
+        self.update_message_signal.emit((message,method))
 
 class basicMessage(BasePage):
     def __init__(self, container_widget: QStackedWidget):
         super().__init__(container_widget)
 
+        self.buttonMethod = None
         self.layout = QVBoxLayout(self.page)
 
         self.message = QLabel("<text here lol>")
         self.message.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.message)
 
+        self.layout.addStretch()
         self.bottomMessage = QLabel("working...")
-        self.bottomMessage.setAlignment(Qt.AlignBottom | Qt.AlignCenter)
+        self.bottomMessage.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.bottomMessage)
-    def dispMessage(self,text):
+
+        self.continueButton = QPushButton("continue")
+        self.layout.addWidget(self.continueButton)
+    def dispMessage(self,text,method = None):
         self.message.setText(text)
+        if self.buttonMethod:
+            self.continueButton.clicked.disconnect(self.buttonMethod)
+            self.buttonMethod = None
+        if method:
+            self.continueButton.setVisible(True)
+            self.bottomMessage.setVisible(False)
+            self.continueButton.clicked.connect(method)
+            self.buttonMethod = method
+            log("showed basic button menu")
+        else:
+            self.continueButton.setVisible(False)
+            self.bottomMessage.setVisible(True)
+            log("showed basic menu")
         self.show()
 
 class OrdersPage(BasePage):
-    def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable, completePage: callable):
+    def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable):
         super().__init__(container_widget)
-        
-        self.dispMessage = dispMessage
-        self.completePage = completePage
+
+        self.on_back = on_back
+        self.dispMessageMethod = dispMessage
         self.mainWorker = mainScriptWorker(self)
         self.mainWorker.update_message_signal.connect(self.dispMessage)
-        self.mainWorker.finished_signal.connect(self.on_worker_finished)
 
         main_layout = QVBoxLayout(self.page)
 
@@ -108,13 +110,15 @@ class OrdersPage(BasePage):
         button_layout = QHBoxLayout()
         back_button = QPushButton("back")
         get_button = QPushButton("continue")
-        back_button.clicked.connect(on_back)
+        back_button.clicked.connect(self.on_back)
         get_button.clicked.connect(self.get)
 
         button_layout.addWidget(back_button)
         button_layout.addWidget(get_button)
         main_layout.addLayout(button_layout)
     
+    def dispMessage(self,data):
+        self.dispMessageMethod(data[0],method=data[1])
     def manualCheckBoxChanged(self,state):
         self.widgets["daysText"].setVisible(state)
         self.widgets["daysField"].setVisible(state)
@@ -127,5 +131,3 @@ class OrdersPage(BasePage):
     def get(self):
         self.mainWorker.start()
         log("complete!")
-    def on_worker_finished(self):
-        self.completePage()

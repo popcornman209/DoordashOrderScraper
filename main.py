@@ -2,7 +2,7 @@ import sys
 
 args = sys.argv
 
-print("\033c\033[3J\033[95m--DoorDash order bot--\nby Leo :)")
+print("\033c\033[3J\033[95m--DoorDash order bot--\nby Leo :)\033[0m")
 
 if "--help" in args:
     print("--days: sets amount of days to check in the past, if not provided you will be asked\n--headless: runs in headless mode, fully in tty\n--force-display-browser: forces the browser to open\n--help: this page :)")
