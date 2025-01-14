@@ -1,4 +1,5 @@
 from seleniumbase import Driver
+from datetime import datetime
 import time, json
 import lib.misc as misc
 import lib.webpages as wpage
@@ -63,6 +64,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     if savePath:
         with open(savePath,"w") as f:
             json.dump({
+                "lastRan": datetime.now().strftime("%m/%d/%Y %H:%M"),
                 "spendings": totalSpending,
                 "orders": spendingDetailed
             }, f)

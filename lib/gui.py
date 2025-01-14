@@ -1,5 +1,6 @@
 import sys,json
 import lib.orderPageGui as ordPage
+import lib.dataGui as dataGui
 from lib.misc import log, BasePage, basicMessage
 from PySide6.QtCore import QThread, Qt, Slot, Signal
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QWidget, QCheckBox, QSpinBox, QLineEdit
@@ -8,14 +9,14 @@ with open("configs/loginInfo.json","r") as f:
     accountInfo = json.load(f)
 
 class MainPage(BasePage):
-    def __init__(self, container_widget: QStackedWidget, on_orders: callable):
+    def __init__(self, container_widget: QStackedWidget, on_orders: callable, viewBasic: callable):
         super().__init__(container_widget)
         self.layout = QVBoxLayout(self.page)
 
         # Add buttons
         buttons = [
             ("Get Orders", on_orders),
-            ("View Basic Data", None),
+            ("View Basic Data", viewBasic),
             ("Export Data", None),
             ("Settings", None),
             ("Update", None),
@@ -46,20 +47,23 @@ class MainWindow(QWidget):
         layout.addWidget(self.stacked_widget)
 
         # Initialize pages
-        self.main_page = MainPage(self.stacked_widget, self.showOrdersPage)
+        self.main_page = MainPage(self.stacked_widget, self.showOrdersPage, self.showBasicData)
         self.basic_message_page = basicMessage(self.stacked_widget)
 
-        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage,self.basic_message_page.dispMessage)
+        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
+        self.basicDataPage = dataGui.viewBasic(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
 
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.main_page.page)
         self.stacked_widget.addWidget(self.orders_page.page)
         self.stacked_widget.addWidget(self.basic_message_page.page)
+        self.stacked_widget.addWidget(self.basicDataPage.page)
 
         log("GUI open")
 
     def showMainPage(self): self.main_page.show()
     def showOrdersPage(self): self.orders_page.show()
+    def showBasicData(self): self.basicDataPage.display()
 
 
 def run():
