@@ -12,7 +12,7 @@ with open("configs/loginInfo.json","r") as f: #loads xpaths and classes
 
 log = misc.log #logging method
 
-def main(headless,browserHeadless,days): #days -1 will ask the user, should be defualt. headless means no gui
+def main(headless,browserHeadless,days,accountInfo=accountInfo): #days -1 will ask the user, should be defualt. headless means no gui
     driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
