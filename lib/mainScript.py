@@ -13,7 +13,7 @@ with open("configs/loginInfo.json","r") as f:
 
 log = misc.log #logging method
 
-def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None): #days -1 will ask the user, should be defualt. headless means no gui
+def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None, selectOrdersMethod=None): #days -1 will ask the user, should be defualt. headless means no gui
     displayMessageMethod("opening browser...")
     driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
@@ -34,7 +34,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
 
         if orders:
-            selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver) #get selected orders
+            selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver, selectOrdersMethod) #get selected orders
         else:
             displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
             driver.quit()

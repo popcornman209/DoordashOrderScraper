@@ -49,7 +49,8 @@ class MainWindow(QWidget):
         self.main_page = MainPage(self.stacked_widget, self.showOrdersPage, self.showBasicData)
         self.basic_message_page = basicMessage(self.stacked_widget)
 
-        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
+        self.selectOrdersPage = ordPage.orderSelector(self.stacked_widget)
+        self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage, self.selectOrdersPage.get)
         self.basicDataPage = dataGui.viewBasic(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
 
         # Add pages to stacked widget

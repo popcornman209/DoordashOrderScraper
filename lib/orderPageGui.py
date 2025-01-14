@@ -28,18 +28,19 @@ class mainScriptWorker(QThread):
                 json.dump(accInfo,f)
             log("updated loginInfo.json")
 
-        mScript.main(False, bHeadless, days, accountInfo=accInfo, displayMessageMethod=self.on_message_update, savePath="data/output.json",mainPageMethod=self.orderWindow.on_back)
+        mScript.main(False, bHeadless, days, accountInfo=accInfo, displayMessageMethod=self.on_message_update, savePath="data/output.json",mainPageMethod=self.orderWindow.on_back, selectOrdersMethod=self.orderWindow.selectOrdersMethod)
         self.finished_signal.emit()
     
     def on_message_update(self, message, method=None):
         self.update_message_signal.emit((message,method))
 
 class OrdersPage(BasePage):
-    def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable):
+    def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable, selectOrdersMethod: callable):
         super().__init__(container_widget)
 
         self.on_back = on_back
         self.dispMessageMethod = dispMessage
+        self.selectOrdersMethod = selectOrdersMethod
         self.mainWorker = mainScriptWorker(self)
         self.mainWorker.update_message_signal.connect(self.dispMessage)
 
@@ -100,3 +101,43 @@ class OrdersPage(BasePage):
     def get(self):
         self.mainWorker.start()
         log("complete!")
+
+class orderSelector(BasePage):
+    def __init__(self, container_widget: QStackedWidget):
+        super().__init__(container_widget)
+        self.layout = QVBoxLayout(self.page)
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.layout.addWidget(self.scroll_area)
+        self.container_widget = QWidget()
+        self.scroll_layout = QVBoxLayout(self.container_widget)
+
+        self.scroll_layout.addStretch()
+        self.scroll_area.setWidget(self.container_widget)
+
+        self.layout.addStretch()
+        self.button_layout = QHBoxLayout()
+        self.loadButton = QPushButton("load more")
+        self.continueButton = QPushButton("continue")
+        self.loadButton.clicked.connect(self.loadMoreMethod)
+        self.continueButton.clicked.connect(self.continueMethod)
+
+        self.button_layout.addWidget(self.loadButton)
+        self.button_layout.addWidget(self.continueButton)
+        self.main_layout.addLayout(self.button_layout)
+    
+    def loadMoreMethod(self): self.loadMorePressed = True
+    def continueMethod(self): self.continuePressed = True
+
+    def get(self,orders):
+        self.loadMorePressed = False
+        self.continuePressed = False
+
+        self.checkboxes = []
+        for order in orders:
+            text = "{},  {}  ({})".format(order["name"],order["info"],order["link"])
+            cb = QCheckBox(order[""])
+            self.checkboxes.append(cb)
+            self.scroll_layout.addWidget(cb)
+        self.show()

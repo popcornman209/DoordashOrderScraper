@@ -81,7 +81,7 @@ def isDateInRange(date_str, days):
 
     return past_date <= date_obj <= current_date # Check if the date is within the last x days
 
-def selectOrders(headless, days, orders, loadMoreMethod, driver):
+def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMethod):
     if days == -1:
         if headless:
             print("\n\norders:") 
@@ -96,7 +96,7 @@ def selectOrders(headless, days, orders, loadMoreMethod, driver):
                     selectedOrders.append(orders[int(order)-1]) #add them to the list
                 return False, selectedOrders
         else:
-            return False, orders[:4] # TEMP
+            loadMore, selected = selectOrdersMethod(orders)
     else:
         if isDateInRange(getDate(orders[-1]),days):
             loadMoreMethod(driver)
