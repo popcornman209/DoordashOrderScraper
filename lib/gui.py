@@ -18,7 +18,6 @@ class MainPage(BasePage):
             ("Get Orders", on_orders),
             ("View Basic Data", viewBasic),
             ("Export Data", None),
-            ("Settings", None),
             ("Update", None),
         ]
 

@@ -23,6 +23,10 @@ class mainScriptWorker(QThread):
             "DDusername": self.orderWindow.widgets["emailField"].text(),
             "DDpassword": self.orderWindow.widgets["passField"].text()
         }
+        if accInfo != accountInfo:
+            with open("configs/loginInfo.json","w") as f: #loads xpaths and classes
+                json.dump(accInfo,f)
+            log("updated loginInfo.json")
 
         mScript.main(False, bHeadless, days, accountInfo=accInfo, displayMessageMethod=self.on_message_update, savePath="data/output.json",mainPageMethod=self.orderWindow.on_back)
         self.finished_signal.emit()

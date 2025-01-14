@@ -34,7 +34,7 @@ class viewBasic(BasePage):
         else:
             self.dispMessageMethod("no data saved!",self.on_back)
 
-class export(BasePage):
+class exportPage(BasePage):
     def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable):
         super().__init__(container_widget)
 
