@@ -1,6 +1,6 @@
 import sys,json
-import lib.orderPage as ordPage
-from lib.misc import log, BasePage
+import lib.orderPageGui as ordPage
+from lib.misc import log, BasePage, basicMessage
 from PySide6.QtCore import QThread, Qt, Slot, Signal
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QWidget, QCheckBox, QSpinBox, QLineEdit
 
@@ -47,7 +47,7 @@ class MainWindow(QWidget):
 
         # Initialize pages
         self.main_page = MainPage(self.stacked_widget, self.showOrdersPage)
-        self.basic_message_page = ordPage.basicMessage(self.stacked_widget)
+        self.basic_message_page = basicMessage(self.stacked_widget)
 
         self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage,self.basic_message_page.dispMessage)
 

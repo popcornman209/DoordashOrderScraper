@@ -30,41 +30,6 @@ class mainScriptWorker(QThread):
     def on_message_update(self, message, method=None):
         self.update_message_signal.emit((message,method))
 
-class basicMessage(BasePage):
-    def __init__(self, container_widget: QStackedWidget):
-        super().__init__(container_widget)
-
-        self.buttonMethod = None
-        self.layout = QVBoxLayout(self.page)
-
-        self.message = QLabel("<text here lol>")
-        self.message.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.message)
-
-        self.layout.addStretch()
-        self.bottomMessage = QLabel("working...")
-        self.bottomMessage.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.bottomMessage)
-
-        self.continueButton = QPushButton("continue")
-        self.layout.addWidget(self.continueButton)
-    def dispMessage(self,text,method = None):
-        self.message.setText(text)
-        if self.buttonMethod:
-            self.continueButton.clicked.disconnect(self.buttonMethod)
-            self.buttonMethod = None
-        if method:
-            self.continueButton.setVisible(True)
-            self.bottomMessage.setVisible(False)
-            self.continueButton.clicked.connect(method)
-            self.buttonMethod = method
-            log('showed basic button menu "{}"'.format(text))
-        else:
-            self.continueButton.setVisible(False)
-            self.bottomMessage.setVisible(True)
-            log('showed basic menu "{}"'.format(text))
-        self.show()
-
 class OrdersPage(BasePage):
     def __init__(self, container_widget: QStackedWidget, on_back: callable, dispMessage: callable):
         super().__init__(container_widget)
