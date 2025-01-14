@@ -1,6 +1,14 @@
 import pickle
 from datetime import datetime, timedelta
+from PySide6.QtWidgets import QStackedWidget, QWidget
 
+class BasePage:
+    def __init__(self, container_widget: QStackedWidget):
+        self.page = QWidget()
+        self.container_widget = container_widget
+
+    def show(self): # Switch to this page in the stacked widget.
+        self.container_widget.setCurrentWidget(self.page)
 
 class cookies:
     cookieFile = "data/cookies.pkl"
