@@ -1,5 +1,4 @@
 # DoordashOrderScraper
-## NOTE: not finished! still programming most of the features outside of basic functionality!
 to collect how much money each person has spend on doordash group orders over a set amount of time.
 
 ## instalation
@@ -19,7 +18,7 @@ pip install -r requirements.txt
 ```
 
 ## running the program
-to run the program with a gui, run:
+to run the program with a gui, open the "runLinux" or "runMacOS" file or run:
 ```sh
 venv/bin/python main.py
 ```
