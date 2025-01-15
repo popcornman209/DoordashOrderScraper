@@ -4,7 +4,7 @@ from lib.misc import log
 
 class updatePage:
     def __init__(self,displayMethod,backToMain):
-        self.displayMethod
+        self.displayMethod = displayMethod
         self.backToMain = backToMain
     def update(self):
         try:
