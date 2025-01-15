@@ -1,6 +1,7 @@
 import sys,json
 import lib.orderPageGui as ordPage
 import lib.dataGui as dataGui
+import lib.update as updPage
 from lib.misc import log, BasePage, basicMessage
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QPushButton, QLabel, QStackedWidget, QWidget
@@ -54,6 +55,7 @@ class MainWindow(QWidget):
 
         self.basicDataPage = dataGui.viewBasic(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
         self.exportPage = dataGui.exportPage(self.stacked_widget,self.showMainPage,self.basic_message_page.dispMessage)
+        self.updatePage = updPage.updatePage(self.basic_message_page.dispMessage,self.showMainPage)
 
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.main_page.page)
