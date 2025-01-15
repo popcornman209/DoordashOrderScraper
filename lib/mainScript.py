@@ -18,6 +18,11 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
+    if driver.title == "Just a moment...":
+        if browserHeadless: raise RuntimeError("captcha recieved! you cannot run in headless mode")
+        else:
+            if displayMessageMethod: displayMessageMethod("press enter in console\nwhen captcha completed")
+            input("press enter when on login page (if you get an error about crf tokens press back button in browser)")
 
     if "identity" in driver.current_url: #if not logged in
         if displayMessageMethod: displayMessageMethod("logging in...")
