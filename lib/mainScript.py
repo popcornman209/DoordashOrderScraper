@@ -24,7 +24,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         wpage.accounts.login(driver,accountInfo["autoLogin"],accountInfo["DDusername"],accountInfo["DDpassword"]) #log in
 
     if displayMessageMethod: displayMessageMethod("waiting for page to load...")
-    driver.wait_for_element("xpath",objectLocations["historyPage"]["ordersList"]) #wait for orders list page to show up
+    driver.wait_for_element("xpath",objectLocations["historyPage"]["ordersList"], timeout=30) #wait for orders list page to show up
 
     selecting = True
     while selecting:
