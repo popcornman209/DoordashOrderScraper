@@ -1,3 +1,5 @@
 auto running script
     output to email/discord
     errors get sent to discord/email
+test on macos/windows
+more comments
