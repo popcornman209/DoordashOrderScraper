@@ -1,4 +1,4 @@
 PySide6==6.8.1.1
 seleniumbase==4.33.14
 pandas==2.2.3
-GitPython==0.3.2
+GitPython==3.1.44
