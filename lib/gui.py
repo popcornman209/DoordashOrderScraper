@@ -10,7 +10,7 @@ with open("configs/loginInfo.json","r") as f:
     accountInfo = json.load(f)
 
 class MainPage(BasePage):
-    def __init__(self, container_widget: QStackedWidget, on_orders: callable, viewBasic: callable, exportPage: callable):
+    def __init__(self, container_widget: QStackedWidget, on_orders: callable, viewBasic: callable, exportPage: callable, updateMethod: callable):
         super().__init__(container_widget)
         self.layout = QVBoxLayout(self.page)
 
@@ -19,7 +19,7 @@ class MainPage(BasePage):
             ("Get Orders", on_orders),
             ("View Basic Data", viewBasic),
             ("Export Data", exportPage),
-            ("Update", None),
+            ("Update", updateMethod),
         ]
 
         for text, callback in buttons:
@@ -47,7 +47,7 @@ class MainWindow(QWidget):
         layout.addWidget(self.stacked_widget)
 
         # Initialize pages
-        self.main_page = MainPage(self.stacked_widget, self.showOrdersPage, self.showBasicData, self.showExportPage)
+        self.main_page = MainPage(self.stacked_widget, self.showOrdersPage, self.showBasicData, self.showExportPage, self.updateMethod)
         self.basic_message_page = basicMessage(self.stacked_widget)
 
         self.selectOrdersPage = ordPage.orderSelector(self.stacked_widget)
@@ -71,6 +71,7 @@ class MainWindow(QWidget):
     def showOrdersPage(self): self.orders_page.show()
     def showBasicData(self): self.basicDataPage.display()
     def showExportPage(self): self.exportPage.display()
+    def updateMethod(self): self.updatePage.update()
 
 
 def run():
