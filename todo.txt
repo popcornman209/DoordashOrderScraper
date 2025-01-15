@@ -1,4 +1,3 @@
-update button
 auto running script
     output to email/discord
     errors get sent to discord/email
