@@ -34,7 +34,8 @@ if you do not want to use the gui, see the arguments below for how to run this i
 `--headless` will run the program in a headless configuration, fully in a tty.<br>
 `--days x` will make the script get orders x days in the past. this is needed if tryng to run the script automatically, as otherwise it will try and get an input of which orders to count.<br>
 `--force-display-browser` forces the browser to display when in headless mode<br>
-`--output x` saves the data to a file, formatted as a json. only works in headless mode
+`--output x` saves the data to a file, formatted as a json by default. only works in headless mode<br>
+`--outputType x`: set to 'json' or 'csv' to say output type, also only in headless
 
 ## configs
 you will be able to edit these settings in the gui, but without that you can do it manually.

@@ -1,4 +1,4 @@
-import pickle, time
+import pickle, time, json, pandas
 from datetime import datetime, timedelta
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QLabel, QPushButton
@@ -112,6 +112,35 @@ def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMet
             for order in orders:
                 if isDateInRange(getDate(order),days): selectedOrders.append(order)
             return False, selectedOrders
+
+def export(data,type,path):
+    if type == "json":
+        with open(path,"w") as f:
+            json.dump(data,f)
+        log("outputted json to {}".format(path))
+    else:
+        output = [
+            pandas.DataFrame({
+                "people": list(data["spendings"].keys()),
+                "money spent": [round(value, 2) for value in data["spendings"].values()],
+                "store name": "TOTAL"
+            })
+        ]
+        for order in data["orders"]:
+            orderData = data["orders"][order]
+            currentOrderOutput = pandas.DataFrame({
+                "people": list(orderData["spending"].keys()),
+                "money spent": [round(value, 2) for value in orderData["spending"].values()],
+                "store name": [orderData["name"]]*len(orderData["spending"]),
+                "group order info": [orderData["info"]]*len(orderData["spending"]),
+                "receipt link": [order]*len(orderData["spending"])
+            })
+            output.append(currentOrderOutput)
+
+        combined_df = pandas.concat(output, ignore_index=True)
+        combined_df.to_csv(path, index=False)
+
+        log("outputted csv to {}".format(path))
 
 def log(string):
     time = datetime.now()

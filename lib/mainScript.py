@@ -13,7 +13,7 @@ with open("configs/loginInfo.json","r") as f:
 
 log = misc.log #logging method
 
-def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None, selectOrdersMethod=None, getOrdersMethod=None): #days -1 will ask the user, should be defualt. headless means no gui
+def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None, selectOrdersMethod=None, getOrdersMethod=None, fileType="json"): #days -1 will ask the user, should be defualt. headless means no gui
     if displayMessageMethod: displayMessageMethod("opening browser...")
     driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
@@ -56,7 +56,10 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
 
         spending = wpage.receiptPage.getSpending(driver) #gets spending of eadch person on the current order
 
-        spendingDetailed[order["link"]] = spending
+        spendingDetailed[order["link"]] = {}
+        spendingDetailed[order["link"]]["spending"] = spending
+        spendingDetailed[order["link"]]["name"] = order["name"]
+        spendingDetailed[order["link"]]["info"] = order["info"]
 
         for person in spending: #for each person
             if person not in totalSpending: totalSpending[person] = spending[person] #add them to the totals if they arent there
@@ -68,12 +71,12 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
 
     driver.quit()
     if savePath:
-        with open(savePath,"w") as f:
-            json.dump({
-                "lastRan": datetime.now().strftime("%m/%d/%Y %H:%M"),
-                "spendings": totalSpending,
-                "orders": spendingDetailed
-            }, f)
+        data = {
+            "lastRan": datetime.now().strftime("%m/%d/%Y %H:%M"),
+            "spendings": totalSpending,
+            "orders": spendingDetailed
+        }
+        misc.export(data, fileType, savePath)
     if displayMessageMethod:
         displayMessageMethod("script completed!\ndata saved.",method=mainPageMethod)
     return totalSpending, spendingDetailed #return values

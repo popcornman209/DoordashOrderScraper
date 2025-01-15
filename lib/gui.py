@@ -2,14 +2,14 @@ import sys,json
 import lib.orderPageGui as ordPage
 import lib.dataGui as dataGui
 from lib.misc import log, BasePage, basicMessage
-from PySide6.QtCore import QThread, Qt, Slot, Signal
-from PySide6.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QWidget, QCheckBox, QSpinBox, QLineEdit
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QVBoxLayout, QPushButton, QLabel, QStackedWidget, QWidget
 
 with open("configs/loginInfo.json","r") as f:
     accountInfo = json.load(f)
 
 class MainPage(BasePage):
-    def __init__(self, container_widget: QStackedWidget, on_orders: callable, viewBasic: callable):
+    def __init__(self, container_widget: QStackedWidget, on_orders: callable, viewBasic: callable, exportPage: callable):
         super().__init__(container_widget)
         self.layout = QVBoxLayout(self.page)
 
@@ -17,7 +17,7 @@ class MainPage(BasePage):
         buttons = [
             ("Get Orders", on_orders),
             ("View Basic Data", viewBasic),
-            ("Export Data", None),
+            ("Export Data", exportPage),
             ("Update", None),
         ]
 
@@ -46,13 +46,14 @@ class MainWindow(QWidget):
         layout.addWidget(self.stacked_widget)
 
         # Initialize pages
-        self.main_page = MainPage(self.stacked_widget, self.showOrdersPage, self.showBasicData)
+        self.main_page = MainPage(self.stacked_widget, self.showOrdersPage, self.showBasicData, self.showExportPage)
         self.basic_message_page = basicMessage(self.stacked_widget)
 
         self.selectOrdersPage = ordPage.orderSelector(self.stacked_widget)
-        self.selectOrdersPage.displays = self.displays
         self.orders_page = ordPage.OrdersPage(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage, self.selectOrdersPage)
+
         self.basicDataPage = dataGui.viewBasic(self.stacked_widget, self.showMainPage, self.basic_message_page.dispMessage)
+        self.exportPage = dataGui.exportPage(self.stacked_widget,self.showMainPage,self.basic_message_page.dispMessage)
 
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.main_page.page)
@@ -60,13 +61,14 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.orders_page.page)
         self.stacked_widget.addWidget(self.basic_message_page.page)
         self.stacked_widget.addWidget(self.basicDataPage.page)
+        self.stacked_widget.addWidget(self.exportPage.page)
 
         log("GUI open")
 
     def showMainPage(self): self.main_page.show()
     def showOrdersPage(self): self.orders_page.show()
     def showBasicData(self): self.basicDataPage.display()
-    def displays(self,orders): self.selectOrdersPage.display(orders)
+    def showExportPage(self): self.exportPage.display()
 
 
 def run():
