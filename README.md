@@ -22,7 +22,8 @@ chmod a+x runMacOS.command runLinux.sh
 ```
 
 ## running the program
-to run the program with a gui, doubleclick the "runLinux" or "runMacOS" file or the below command. if runMacOS doesnt open a terminal, right click and click open with, then other. then, change "recommended applications" to all, and select applications/utilities/terminal.app.
+to run the program with a gui, doubleclick the "runLinux" or "runMacOS" file or the below command. if runMacOS doesnt open a terminal, right click and click open with, then other. then, change "recommended applications" to all, and select applications/utilities/terminal.app.<br>
+if you want to start it in a tty instead, run:
 ```sh
 venv/bin/python main.py
 ```
