@@ -63,15 +63,14 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         log("receipt {} loaded".format(order["link"].replace("https://www.doordash.com/orders/","")))
         time.sleep(.5) #wait
 
-        spending, date = wpage.receiptPage.getSpending(driver) #gets spending of eadch person on the current order
+        spending, date, orderDetailed = wpage.receiptPage.getSpending(driver) #gets spending of eadch person on the current order
 
         orderInfo = order["info"].split(" • ") #receipt info: date, total price, num of items, personal/business
-        spendingDetailed[order["link"]] = {} #creates detailed dict for order
+        spendingDetailed[order["link"]] = {"financial":orderDetailed} #creates detailed dict for order
         spendingDetailed[order["link"]]["spending"] = spending #sets how much everyone spent
         spendingDetailed[order["link"]]["name"] = order["name"] #store name
-        spendingDetailed[order["link"]]["totalPrice"] = orderInfo[1]
-        spendingDetailed[order["link"]]["numberOfItems"] = orderInfo[2]
-        spendingDetailed[order["link"]]["date"] = date
+        spendingDetailed[order["link"]]["numberOfItems"] = orderInfo[2] #number of items
+        spendingDetailed[order["link"]]["date"] = date #date of order
 
         for person in spending: #for each person
             if person not in totalSpending: totalSpending[person] = spending[person] #add them to the totals if they arent there

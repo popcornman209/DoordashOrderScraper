@@ -64,6 +64,7 @@ class OrdersPage(BasePage):
         for widget in self.widgets:
             main_layout.addWidget(self.widgets[widget], alignment=Qt.AlignHCenter) #puts all of the widgets in the layout
         
+        self.widgets["headLessBrowser"].setCheckState(Qt.Checked)
         self.widgets["autoSelectOrders"].stateChanged.connect(self.manualCheckBoxChanged) #toggle days in past objects when swithed
         self.manualCheckBoxChanged(False) #hide said objects
 

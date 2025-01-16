@@ -72,18 +72,31 @@ class historyPage:
 class receiptPage:
     def getSpending(driver):
         date = driver.find_element("xpath", objectLocations["receipt"]["date"]).text.replace(" at ",", ")
+
         ordersContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainer"]) #gets container of each persons orders
         orders = ordersContainer.find_elements("xpath", "./div") #each persons orders
+        detailedInfoContainer = orders[-1].find_element("xpath", "./div") #container of subtotals
         orders.pop() #removes "total" div
+
+        detailedOrderData = {}
+        for data in detailedInfoContainer.find_elements("xpath", "./div"): #for each subtotal in subtotals
+            key = data.find_element("xpath", objectLocations["receipt"]["detailedInfoKey"]).text #get the name
+            val = data.find_element("xpath", objectLocations["receipt"]["detailedInfoVal"]).text #get the value
+            if "\n" in val: val = val.split("\n")[1] #if it was crossed out for whatever reason fix that
+            detailedOrderData[key] = val #add it to the list
+        log(detailedOrderData)
+        
 
         spending = {}
         for order in orders:
             items = order.find_elements("xpath", "./div") #each persons orders
             items.pop(0)
+            
             price = 0
             for item in items:
                 price += round(float(item.find_element("xpath", objectLocations["receipt"]["priceLocal"]).text[1:]),2) #gets how much they spent
+
             person = order.find_element("xpath", objectLocations["receipt"]["nameLocal"]).text #gets person
             if person not in spending: spending[person] = price #adds them to the list if they arent already
             else: spending[person] += price #if they are there then add to their total (not sure why i added this?)
-        return spending, date
+        return spending, date, detailedOrderData

@@ -112,15 +112,22 @@ def export(data,type,path): #exports file
         ]
         for order in data["orders"]: #loop through each detailed order
             orderData = data["orders"][order]
-            currentOrderOutput = pandas.DataFrame({ #create data
-                "people": list(orderData["spending"].keys()),
-                "money spent": [round(value, 2) for value in orderData["spending"].values()],
-                "store name": [orderData["name"]]*len(orderData["spending"]),
-                "group order date": [orderData["date"]]*len(orderData["spending"]),
-                "group order price": [orderData["totalPrice"]]*len(orderData["spending"]),
-                "group order num of items": [orderData["numberOfItems"]]*len(orderData["spending"]),
-                "receipt link": [order]*len(orderData["spending"])
-            })
+
+            numPeople = len(orderData["spending"]) #number of people, for formatting stuff
+
+            outputData = { #create data
+                "people": list(orderData["spending"].keys()), #list of people
+                "money spent": [round(value, 2) for value in orderData["spending"].values()], #how much they spent
+
+                "store name": [orderData["name"]] *numPeople, #store name
+                "order date": [orderData["date"]] *numPeople, #date of order
+                "order num of items": [orderData["numberOfItems"]] *numPeople, #number of items
+                "receipt link": [order]*len(orderData["spending"]) #receipt link
+            }
+            for key in orderData["financial"]: #for data in detailed financial (the subtotals list)
+                outputData[f"Order {key}"] = [orderData["financial"][key]] *numPeople #add it to the spreadsheet
+
+            currentOrderOutput = pandas.DataFrame(outputData)
             output.append(currentOrderOutput) #append to the output
 
         combined_df = pandas.concat(output, ignore_index=True) #do whatever this does
