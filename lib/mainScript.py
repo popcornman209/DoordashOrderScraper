@@ -59,7 +59,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     for order in selectedOrders: #loop through all orders
         if displayMessageMethod: displayMessageMethod("loading receipt {}/{}".format(i,len(selectedOrders))) #log progress
         driver.get(order["link"]) #load page
-        driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainer"]) #wait for receipt to load
+        driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainer"],timeout=30) #wait for receipt to load
         log("receipt {} loaded".format(order["link"].replace("https://www.doordash.com/orders/","")))
         time.sleep(.5) #wait
 
