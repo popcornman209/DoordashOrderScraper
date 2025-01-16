@@ -78,8 +78,12 @@ class receiptPage:
 
         spending = {}
         for order in orders:
+            items = order.find_elements("xpath", "./div") #each persons orders
+            items.pop(0)
+            price = 0
+            for item in items:
+                price += round(float(item.find_element("xpath", objectLocations["receipt"]["priceLocal"]).text[1:]),2) #gets how much they spent
             person = order.find_element("xpath", objectLocations["receipt"]["nameLocal"]).text #gets person
-            price = round(float(order.find_element("xpath", objectLocations["receipt"]["priceLocal"]).text[1:]),2) #gets how much they spent
             if person not in spending: spending[person] = price #adds them to the list if they arent already
             else: spending[person] += price #if they are there then add to their total (not sure why i added this?)
         return spending, date
