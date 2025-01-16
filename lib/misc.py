@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QLabel, QPushButton
 
-class BasePage:
+class BasePage: #base page for all gui pages
     def __init__(self, container_widget: QStackedWidget):
-        self.page = QWidget()
-        self.container_widget = container_widget
+        self.page = QWidget() #main page
+        self.container_widget = container_widget #container that stores all pages
 
     def show(self): # Switch to this page in the stacked widget.
         self.container_widget.setCurrentWidget(self.page)
@@ -15,58 +15,42 @@ class basicMessage(BasePage):
     def __init__(self, container_widget: QStackedWidget):
         super().__init__(container_widget)
 
-        self.buttonMethod = None
+        self.buttonMethod = None #method that button runs when pressed
         self.layout = QVBoxLayout(self.page)
 
-        self.message = QLabel("<text here lol>")
-        self.message.setAlignment(Qt.AlignCenter)
+        self.message = QLabel("<text here lol>") #text that can be changed
+        self.message.setAlignment(Qt.AlignCenter) #alignment
         self.layout.addWidget(self.message)
 
-        self.layout.addStretch()
-        self.bottomMessage = QLabel("working...")
+        self.layout.addStretch() #put buttons and labels at bottom
+        self.bottomMessage = QLabel("working...") #bottom text
         self.bottomMessage.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.bottomMessage)
 
-        self.continueButton = QPushButton("continue")
+        self.continueButton = QPushButton("continue") #buttom button
         self.layout.addWidget(self.continueButton)
     def dispMessage(self,text,method = None):
-        self.message.setText(text)
-        if self.buttonMethod:
+        self.message.setText(text) #set top text
+        if self.buttonMethod: #if button had a method previously
             self.continueButton.clicked.disconnect(self.buttonMethod)
-            self.buttonMethod = None
-        if method:
-            self.continueButton.setVisible(True)
-            self.bottomMessage.setVisible(False)
-            self.continueButton.clicked.connect(method)
-            self.buttonMethod = method
+            self.buttonMethod = None #remove and disconnect it
+        if method: #if button should be used
+            self.continueButton.setVisible(True) #show the button
+            self.bottomMessage.setVisible(False) #and hide the bottom text
+            self.continueButton.clicked.connect(method) #connect the button to method
+            self.buttonMethod = method #set current method, used for deleting it later
             log('showed basic button menu "{}"'.format(text))
-        else:
-            self.continueButton.setVisible(False)
-            self.bottomMessage.setVisible(True)
+        else: #if button shouldnt be used
+            self.continueButton.setVisible(False) #hide button
+            self.bottomMessage.setVisible(True) #show "working..." text
             log('showed basic menu "{}"'.format(text))
-        self.show()
+        self.show() #display page
 
-class cookies:
-    cookieFile = "data/cookies.pkl"
-
-    def saveCookies(driver):
-        cookies = [cookie for cookie in driver.get_cookies() if "doordash" in cookie["domain"]]
-        with open(cookies.cookieFile, "wb") as f:
-            pickle.dump(cookies, f)
-
-    def loadCookies(driver):
-        with open(cookies.cookieFile, "rb") as f:
-            cookies = pickle.load(f)
-        for cookie in cookies:
-            if "domain" in cookie and not cookie["domain"].endswith("doordash.com"):
-                del cookie["domain"]
-            driver.add_cookie(cookie)
-
-def getDate(order):
+def getDate(order): #gets the date from the order
     parsed = order["info"].split(" • ")
     return parsed[0]
 
-def isDateInRange(date_str, days):
+def isDateInRange(date_str, days): #checks if date is within a rangw
     current_date = datetime.now()
 
     date_str_with_year = f"{current_date.year}, {date_str}" # Add the current year to the date string
@@ -96,52 +80,53 @@ def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMet
                     selectedOrders.append(orders[int(order)-1]) #add them to the list
                 return False, selectedOrders
         else:
-            selectOrdersMethod(orders)
+            selectOrdersMethod(orders) #display get orders page
             selecting = True
-            while selecting:
-                selecting, loadMore, selectedOrders = getOrdersMethod()
-                time.sleep(0.01)
-            if loadMore: loadMoreMethod(driver) 
-            return loadMore,selectedOrders
+            while selecting: #while still waiting for input
+                selecting, loadMore, selectedOrders = getOrdersMethod() #check if buttons where pressed
+                time.sleep(0.05) #wait a bit
+            if loadMore: loadMoreMethod(driver) #if should load more, do so
+            return loadMore,selectedOrders #return the rest
     else:
-        if isDateInRange(getDate(orders[-1]),days):
-            loadMoreMethod(driver)
+        if isDateInRange(getDate(orders[-1]),days): #if last order loaded is within range
+            loadMoreMethod(driver) #load more
             return True, []
-        else:
+        else: #if last order loaded isnt within the range selectde
             selectedOrders = []
-            for order in orders:
-                if isDateInRange(getDate(order),days): selectedOrders.append(order)
-            return False, selectedOrders
+            for order in orders: #loop through loaded orders
+                if isDateInRange(getDate(order),days): selectedOrders.append(order) #select them if within range
+            return False, selectedOrders #return that ^
 
-def export(data,type,path):
-    if type == "json":
+def export(data,type,path): #exports file
+    if type == "json": #if json file
         with open(path,"w") as f:
-            json.dump(data,f)
+            json.dump(data,f) #just dump the data
         log("outputted json to {}".format(path))
-    else:
-        output = [
+    elif type == "csv": #if csv...
+        output = [ #start csv off with totals
             pandas.DataFrame({
                 "people": list(data["spendings"].keys()),
                 "money spent": [round(value, 2) for value in data["spendings"].values()],
                 "store name": "TOTAL"
             })
         ]
-        for order in data["orders"]:
+        for order in data["orders"]: #loop through each detailed order
             orderData = data["orders"][order]
-            currentOrderOutput = pandas.DataFrame({
+            currentOrderOutput = pandas.DataFrame({ #create data
                 "people": list(orderData["spending"].keys()),
                 "money spent": [round(value, 2) for value in orderData["spending"].values()],
                 "store name": [orderData["name"]]*len(orderData["spending"]),
                 "group order info": [orderData["info"]]*len(orderData["spending"]),
                 "receipt link": [order]*len(orderData["spending"])
             })
-            output.append(currentOrderOutput)
+            output.append(currentOrderOutput) #append to the output
 
-        combined_df = pandas.concat(output, ignore_index=True)
-        combined_df.to_csv(path, index=False)
+        combined_df = pandas.concat(output, ignore_index=True) #do whatever this does
+        combined_df.to_csv(path, index=False) #save to file
 
         log("outputted csv to {}".format(path))
+    else: raise TypeError("{} not recognized, only json and csv are supported".format(type))
 
-def log(string):
+def log(string): #basic log function
     time = datetime.now()
     print("{}:{}:{} ; {}".format(time.hour,time.minute,time.second,string))

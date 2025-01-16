@@ -11,7 +11,7 @@ class updatePage:
             # Open the repository
             repo = Repo(".")
             
-            if repo.is_dirty(untracked_files=True):
+            if repo.is_dirty(untracked_files=True): #if there are uncommited changes
                 self.displayMethod("there are uncommited changes!",method=self.backToMain)
                 return
 
@@ -25,13 +25,13 @@ class updatePage:
             local_commit = repo.commit(f"refs/heads/{current_branch}")
             remote_commit = repo.commit(f"refs/remotes/origin/{current_branch}")
 
-            if local_commit != remote_commit:
+            if local_commit != remote_commit: #if there are updates
                 self.displayMethod("updating...")
                 log("pulling updates")
-                repo.remotes.origin.pull()
+                repo.remotes.origin.pull() #pull said updates
                 self.displayMethod("successfully updated!\nclose and re open to apply.",method=self.backToMain)
-            else:
-                self.displayMethod("already up to date.",method=self.backToMain)
+            else: #otherwise say there are no updates
+                self.displayMethod("already up to date.",method=self.backToMain) 
                 print("The repository is up to date.")
 
         except Exception as e:

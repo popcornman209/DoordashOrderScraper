@@ -6,7 +6,7 @@ with open("configs/objectLocations.json","r") as f:
 
 class accounts:
     def auioLogin(driver,usrname,passwd):
-        if usrname == "" or passwd == "": raise ValueError("username and password must be filled out if using auto login!")
+        if usrname == "" or passwd == "": raise ValueError("username and password must be filled out if using auto login!") #raise error
         driver.find_element("xpath", objectLocations["login"]["email"]).send_keys(usrname) #gets email text field and types email
         log("typed email")
         time.sleep(0.25)
@@ -66,7 +66,7 @@ class historyPage:
 
     def loadMore(driver):
         log("loaded more history")
-        loadMoreButton = driver.find_element("xpath", objectLocations["historyPage"]["loadMore"])
+        loadMoreButton = driver.find_element("xpath", objectLocations["historyPage"]["loadMore"]) #finds and presses load more button
         loadMoreButton.click()
 
 class receiptPage:
