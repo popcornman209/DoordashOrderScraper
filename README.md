@@ -2,7 +2,7 @@
 to collect how much money each person has spend on doordash group orders over a set amount of time.
 
 ## instalation
-first, clone the repo. all files will stay in this folder, so put it somewhere nice
+first, go to the location you want to install the script, and clone the repo. all files will stay in this folder, so put it somewhere nice
 ```sh
 git clone https://github.com/popcornman209/DoordashOrderScraper.git
 cd DoordashOrderScraper
