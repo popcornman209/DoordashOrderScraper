@@ -116,7 +116,9 @@ def export(data,type,path): #exports file
                 "people": list(orderData["spending"].keys()),
                 "money spent": [round(value, 2) for value in orderData["spending"].values()],
                 "store name": [orderData["name"]]*len(orderData["spending"]),
-                "group order info": [orderData["info"]]*len(orderData["spending"]),
+                "group order date": [orderData["date"]]*len(orderData["spending"]),
+                "group order price": [orderData["totalPrice"]]*len(orderData["spending"]),
+                "group order num of items": [orderData["numberOfItems"]]*len(orderData["spending"]),
                 "receipt link": [order]*len(orderData["spending"])
             })
             output.append(currentOrderOutput) #append to the output

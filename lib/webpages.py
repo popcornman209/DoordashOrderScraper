@@ -71,6 +71,7 @@ class historyPage:
 
 class receiptPage:
     def getSpending(driver):
+        date = driver.find_element("xpath", objectLocations["receipt"]["date"]).text
         ordersContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainer"]) #gets container of each persons orders
         orders = ordersContainer.find_elements("xpath", "./div") #each persons orders
         orders.pop() #removes "total" div
@@ -81,4 +82,4 @@ class receiptPage:
             price = round(float(order.find_element("xpath", objectLocations["receipt"]["priceLocal"]).text[1:]),2) #gets how much they spent
             if person not in spending: spending[person] = price #adds them to the list if they arent already
             else: spending[person] += price #if they are there then add to their total (not sure why i added this?)
-        return spending
+        return spending, date
