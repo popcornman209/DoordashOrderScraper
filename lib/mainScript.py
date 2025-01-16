@@ -21,8 +21,12 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     if driver.title == "Just a moment...":
         if browserHeadless: raise RuntimeError("captcha recieved! you cannot run in headless mode")
         else:
-            if displayMessageMethod: displayMessageMethod("press enter in console\nwhen captcha completed")
-            input("press enter when on login page (if you get an error about crf tokens press back button in browser)")
+            if displayMessageMethod: displayMessageMethod("press the captcha button...")
+            log("captcha button showed")
+            while driver.find_elements("xpath",objectLocations["login"]["email"]) == []:
+                if driver.find_elements("xpath",objectLocations["login"]["unexpectedCRF"]):
+                    driver.back()
+                time.sleep(0.25)
 
     if "identity" in driver.current_url: #if not logged in
         if displayMessageMethod: displayMessageMethod("logging in...")

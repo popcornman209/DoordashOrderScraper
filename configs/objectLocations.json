@@ -17,6 +17,7 @@
         "passInstead": "//*[@id=\"otc-submit-form\"]/button[2]",
         "passwordWithInstead": "//*[@id=\"FieldWrapper-8\"]",
         "passwordNoInstead": "//*[@id=\"FieldWrapper-2\"]",
-        "signInFinal": "//*[@id=\"login-submit-button\"]"
+        "signInFinal": "//*[@id=\"login-submit-button\"]",
+        "unexpectedCRF": "/html/body/pre"
     }
 }
