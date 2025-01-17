@@ -19,7 +19,9 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
     if driver.title == "Just a moment...": #if captcha loaded
-        if browserHeadless: raise RuntimeError("captcha recieved! you cannot run in headless mode") #tell you to run in normal mode to click the button
+        if browserHeadless:
+            driver.quit()
+            raise RuntimeError("captcha recieved! you cannot run in headless mode") #tell you to run in normal mode to click the button
         else:
             if displayMessageMethod: displayMessageMethod("press the captcha button...") #tell user to press button
             log("captcha button showed") #log just that
@@ -32,6 +34,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         if displayMessageMethod: displayMessageMethod("logging in...") #display logging ing
         success = wpage.accounts.login(driver,accountInfo["autoLogin"],accountInfo["DDusername"],accountInfo["DDpassword"]) #log in
         if not success:
+            driver.quit()
             if displayMessageMethod: displayMessageMethod("script failed!\ncant login, is there 2fa?",method=mainPageMethod)
             else: raise RuntimeError("script failed! cant login, is there 2fa?")
             return
