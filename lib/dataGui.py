@@ -58,14 +58,17 @@ class exportPage(BasePage):
     def export(self,type): #main export function
         with open("data/output.json", "r") as f:
             data = json.load(f) #load data
+
+        downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
         
         options = QFileDialog.Options() #open file browser for save location
         options |= QFileDialog.DontUseNativeDialog  # Optional: Use for consistent appearance across platforms
         default_name = "output.json" if type == "json" else "output.csv" #default name for file
+
         file_path, _ = QFileDialog.getSaveFileName(
             None,
             "Select Destination for Export",
-            default_name,  # Initial directory or file name
+            os.path.join(downloads_folder, default_name),  # Initial directory or file name
             "JSON Files (*.json);;All Files (*)" if type == "json" else "CSV Files (*.csv);;All Files (*)",  # Filter for file types
             options=options
         )
