@@ -31,8 +31,12 @@ class accounts:
         log("typed pass")
         
         time.sleep(0.25)
-        driver.find_element("xpath",objectLocations["login"]["signInFinal"]).click() #click sign in button
-        log("pressed sign in button")
+        try:
+            driver.find_element("xpath",objectLocations["login"]["signInFinal"]).click() #click sign in button
+            log("pressed sign in button")
+            return True
+        except:
+            return False
     
     def login(driver,autoLogin,usr,passw):
         log("reached login window...")

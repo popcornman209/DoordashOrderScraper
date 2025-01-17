@@ -30,7 +30,11 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
 
     if "identity" in driver.current_url: #if not logged in
         if displayMessageMethod: displayMessageMethod("logging in...") #display logging ing
-        wpage.accounts.login(driver,accountInfo["autoLogin"],accountInfo["DDusername"],accountInfo["DDpassword"]) #log in
+        success = wpage.accounts.login(driver,accountInfo["autoLogin"],accountInfo["DDusername"],accountInfo["DDpassword"]) #log in
+        if not success:
+            if displayMessageMethod: displayMessageMethod("script failed!\ncant login, is there 2fa?",method=mainPageMethod)
+            else: raise RuntimeError("script failed! cant login, is there 2fa?")
+            return
 
     if displayMessageMethod: displayMessageMethod("waiting for page to load...") #waiting for history page
     driver.wait_for_element("xpath",objectLocations["historyPage"]["ordersList"]) #wait for orders list page to show up
@@ -45,9 +49,9 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         if orders: #if there are orders in the list
             selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver, selectOrdersMethod, getOrdersMethod) #get selected orders
         else: #empty list?
-            if displayMessageMethod: displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
-            else: print("script failed! no orders found, or thereis an order on the way")
             driver.quit()
+            if displayMessageMethod: displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
+            else: raise RuntimeError("script failed! no orders found, or there is an order on the way")
             return
     
     log("orders:")
