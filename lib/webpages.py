@@ -78,7 +78,10 @@ class receiptPage:
     def getSpending(driver):
         date = driver.find_element("xpath", objectLocations["receipt"]["date"]).text.replace(" at ",", ")
 
-        ordersContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainer"]) #gets container of each persons orders
+        ordersContainerContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainerContainer"]) #gets container of each persons orders
+        ordersCCItems = ordersContainerContainer.find_elements("xpath", "./div") #items in orders container, one of two of them will be the container
+        ordersContainer = ordersCCItems[-1].find_element("xpath", "./div")
+        
         orders = ordersContainer.find_elements("xpath", "./div") #each persons orders
         detailedInfoContainer = orders[-1].find_element("xpath", "./div") #container of subtotals
         orders.pop() #removes "total" div
