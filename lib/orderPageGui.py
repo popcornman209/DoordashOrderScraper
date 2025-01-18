@@ -69,7 +69,7 @@ class OrdersPage(BasePage):
         self.manualCheckBoxChanged(False) #hide said objects
 
         self.widgets["daysField"].setValue(7) #sets default value for days in past
-        self.widgets["daysField"].setRange(0, 364) #sets minimum
+        self.widgets["daysField"].setMinimum(0) #sets minimum
 
         if accountInfo["autoLogin"]: self.widgets["autoLogin"].setCheckState(Qt.Checked) #if autologin setting on, set on by default
         else: self.loginCheckBoxChanged(False) #otherwise hide other objects
