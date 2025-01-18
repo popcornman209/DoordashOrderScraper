@@ -1,4 +1,5 @@
 import time, json
+from selenium.common.exceptions import StaleElementReferenceException
 from lib.misc import log
 
 with open("configs/objectLocations.json","r") as f:
@@ -47,27 +48,35 @@ class accounts:
             return True
 
 class historyPage:
-    def getOrders(driver):
-        parent_div = driver.find_element("xpath", objectLocations["historyPage"]["ordersList"]) #container of all orders
-        orders = parent_div.find_elements("xpath", "./div") #list of orders
+    def getOrders(driver,alreadyLoaded):
+        attempts = 3
+        while attempts > 0:
+            try:
+                parent_div = driver.find_element("xpath", objectLocations["historyPage"]["ordersList"]) #container of all orders
+                orders = parent_div.find_elements("xpath", "./div") #list of orders
 
-        links = []
-        for order in orders:
-            nameContainer = order.find_element("xpath", objectLocations["historyPage"]["nameContainerLocal"])
-            nameContainerItems = nameContainer.find_elements("xpath", "./span") #container of name and group order tag
-            if len(nameContainerItems) == 3: #if group order,
-                receiptButton = order.find_element("xpath",objectLocations["historyPage"]["receiptLocal"]) #button that links to the receipt
-                link = receiptButton.get_attribute("href") #the link
+                links = []
+                for order in orders[alreadyLoaded:]:
+                    nameContainer = order.find_element("xpath", objectLocations["historyPage"]["nameContainerLocal"])
+                    nameContainerItems = nameContainer.find_elements("xpath", "./span") #container of name and group order tag
+                    if len(nameContainerItems) == 3: #if group order,
+                        receiptButton = order.find_element("xpath",objectLocations["historyPage"]["receiptLocal"]) #button that links to the receipt
+                        link = receiptButton.get_attribute("href") #the link
 
-                name = nameContainerItems[0].text #name
-                info = order.find_element("xpath", objectLocations["historyPage"]["informationLocal"]).text #gets order info like date, price, and personal/business
+                        name = nameContainerItems[0].text #name
+                        info = order.find_element("xpath", objectLocations["historyPage"]["informationLocal"]).text #gets order info like date, price, and personal/business
 
-                links.append({ #orders dictionary
-                    "name": name,
-                    "info": info,
-                    "link": link
-                })
-        return links
+                        links.append({ #orders dictionary
+                            "name": name,
+                            "info": info,
+                            "link": link
+                        })
+                return links,len(orders)
+            except StaleElementReferenceException:
+                log("StaleElementReferenceException encountered. Retrying...")
+                attempts -= 1
+                if attempts == 0:
+                    raise RuntimeError("couldnt grab name, stale reference exception exceeded 3 tries!")
 
     def loadMore(driver):
         log("loaded more history")
@@ -81,7 +90,7 @@ class receiptPage:
         ordersContainerContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainerContainer"]) #gets container of each persons orders
         ordersCCItems = ordersContainerContainer.find_elements("xpath", "./div") #items in orders container, one of two of them will be the container
         ordersContainer = ordersCCItems[-1].find_element("xpath", "./div")
-        
+
         orders = ordersContainer.find_elements("xpath", "./div") #each persons orders
         detailedInfoContainer = orders[-1].find_element("xpath", "./div") #container of subtotals
         orders.pop() #removes "total" div
@@ -92,8 +101,6 @@ class receiptPage:
             val = data.find_element("xpath", objectLocations["receipt"]["detailedInfoVal"]).text #get the value
             if "\n" in val: val = val.split("\n")[1] #if it was crossed out for whatever reason fix that
             detailedOrderData[key] = val #add it to the list
-        log(detailedOrderData)
-        
 
         spending = {}
         for order in orders:

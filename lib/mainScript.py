@@ -45,14 +45,20 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     driver.wait_for_element("xpath",objectLocations["historyPage"]["ordersList"]) #wait for orders list page to show up
 
     selecting = True #while selecting orders (loop becuase might need to load page multible times because of load more button)
+    alreadyLoaded = 0
+    orders = []
+    currentDate = datetime.now()
     while selecting:
         time.sleep(3) #wait a bit
         log("history page loaded") #log
 
-        orders = wpage.historyPage.getOrders(driver) #get all orders on main webpage
+        loadedOrders, alreadyLoaded = wpage.historyPage.getOrders(driver,alreadyLoaded) #get all orders on main webpage
+
+        orders += loadedOrders
 
         if orders: #if there are orders in the list
-            selecting, selectedOrders = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver, selectOrdersMethod, getOrdersMethod) #get selected orders
+            selecting, selectedOrders, currentDate = misc.selectOrders(headless, days, orders, wpage.historyPage.loadMore, driver, selectOrdersMethod, getOrdersMethod, loadedOrders, currentDate) #get selected orders
+            
         else: #empty list?
             driver.quit()
             if displayMessageMethod: displayMessageMethod("script failed!\nno orders found, or there\nis an order on the way",method=mainPageMethod)
@@ -67,6 +73,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
     i = 1
     for order in selectedOrders: #loop through all orders
         if displayMessageMethod: displayMessageMethod("loading receipt {}/{}".format(i,len(selectedOrders))) #log progress
+        log("loading receipt {}/{}".format(i,len(selectedOrders)))
         driver.get(order["link"]) #load page
         driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainerContainer"],timeout=20) #wait for receipt to load
         log("receipt {} loaded".format(order["link"].replace("https://www.doordash.com/orders/","")))

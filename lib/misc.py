@@ -50,22 +50,22 @@ def getDate(order): #gets the date from the order
     parsed = order["info"].split(" • ")
     return parsed[0]
 
-def isDateInRange(date_str, days): #checks if date is within a rangw
+def isDateInRange(date_str, days,currentDate): #checks if date is within a rangw
     current_date = datetime.now()
 
-    date_str_with_year = f"{current_date.year}, {date_str}" # Add the current year to the date string
+    date_str_with_year = f"{currentDate.year}, {date_str}" # Add the current year to the date string
 
     date_format = "%Y, %a, %b %d" # Parse the date string into a datetime object, including the year
     date_obj = datetime.strptime(date_str_with_year, date_format)
 
-    if date_obj > current_date: # If the date is after today, adjust it to the previous year
-        date_obj = date_obj.replace(year=current_date.year - 1)
+    if date_obj > currentDate: # If the date is after today, adjust it to the previous year
+        date_obj = date_obj.replace(year=currentDate.year - 1)
 
     past_date = current_date - timedelta(days=days) # Calculate the date x days ago
 
-    return past_date <= date_obj <= current_date # Check if the date is within the last x days
+    return past_date <= date_obj, date_obj # Check if the date is within the last x days
 
-def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMethod, getOrdersMethod):
+def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMethod, getOrdersMethod, loadedOrders, currentDate):
     if days == -1:
         if headless:
             print("\n\norders:") 
@@ -73,12 +73,12 @@ def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMet
             usedOrders = input('\nwhich orders would you like to count? (seperated by ",", or type "load" to load more)\n: ') #gets list of orders
             if usedOrders == "load":
                 loadMoreMethod(driver) #load more
-                return True, []
+                return True, [], 0
             else:
                 selectedOrders = []
                 for order in usedOrders.split(","): #get all selected orders
                     selectedOrders.append(orders[int(order)-1]) #add them to the list
-                return False, selectedOrders
+                return False, selectedOrders, 0
         else:
             selectOrdersMethod(orders) #display get orders page
             selecting = True
@@ -86,16 +86,20 @@ def selectOrders(headless, days, orders, loadMoreMethod, driver, selectOrdersMet
                 selecting, loadMore, selectedOrders = getOrdersMethod() #check if buttons where pressed
                 time.sleep(0.05) #wait a bit
             if loadMore: loadMoreMethod(driver) #if should load more, do so
-            return loadMore,selectedOrders #return the rest
+            return loadMore,selectedOrders, 0 #return the rest
     else:
-        if isDateInRange(getDate(orders[-1]),days): #if last order loaded is within range
+        for order in loadedOrders:
+            inRange, currentDate = isDateInRange(getDate(order),days,currentDate)
+        if inRange:
             loadMoreMethod(driver) #load more
-            return True, []
-        else: #if last order loaded isnt within the range selectde
-            selectedOrders = []
-            for order in orders: #loop through loaded orders
-                if isDateInRange(getDate(order),days): selectedOrders.append(order) #select them if within range
-            return False, selectedOrders #return that ^
+            return True, [], currentDate
+        
+        currentDate = datetime.now()
+        selectedOrders = []
+        for order in orders: #loop through loaded orders
+            inRange, currentDate = isDateInRange(getDate(order),days,currentDate)
+            if inRange: selectedOrders.append(order) #select them if within range
+        return False, selectedOrders, 0 #return that ^
 
 def export(data,type,path): #exports file
     if type == "json": #if json file
