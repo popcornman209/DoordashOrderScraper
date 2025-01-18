@@ -41,9 +41,10 @@ class accounts:
     def login(driver,autoLogin,usr,passw):
         log("reached login window...")
         if autoLogin: #if fill in email and password automatically
-            accounts.auioLogin(driver,usr,passw)
+            return(accounts.auioLogin(driver,usr,passw))
         else: #if not fill in email automatically
             input("press enter when logged in and on orders page")
+            return True
 
 class historyPage:
     def getOrders(driver):

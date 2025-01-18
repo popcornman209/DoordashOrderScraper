@@ -31,7 +31,9 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
                 time.sleep(0.25) #wait a bit to check again
 
     if "identity" in driver.current_url: #if not logged in
-        if displayMessageMethod: displayMessageMethod("logging in...") #display logging ing
+        if displayMessageMethod:
+            if accountInfo["autoLogin"]: displayMessageMethod("logging in...") #display logging ing
+            else: displayMessageMethod("press enter in console once logged in")
         success = wpage.accounts.login(driver,accountInfo["autoLogin"],accountInfo["DDusername"],accountInfo["DDpassword"]) #log in
         if not success:
             driver.quit()
