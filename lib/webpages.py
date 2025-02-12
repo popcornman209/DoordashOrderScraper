@@ -90,16 +90,14 @@ class receiptPage:
     def getSpending(driver):
         date = driver.find_element("xpath", objectLocations["receipt"]["date"]).text.replace(" at ",", ")
 
-        ordersContainerContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainerContainer"]) #gets container of each persons orders
-        ordersCCItems = ordersContainerContainer.find_elements("xpath", "./div") #items in orders container, one of two of them will be the container
-        ordersContainer = ordersCCItems[-1].find_element("xpath", "./div")
+        ordersContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainer"]) #gets container of each persons orders
+        orders = ordersContainer.find_elements("xpath", "./div") #list of orders, last item is subtotals
 
-        orders = ordersContainer.find_elements("xpath", "./div") #each persons orders
-        detailedInfoContainer = orders[-1].find_element("xpath", "./div") #container of subtotals
+        subtotalContainer = orders[-1].find_element("xpath", "./div") #container of subtotals
         orders.pop() #removes "total" div
 
         detailedOrderData = {}
-        for data in detailedInfoContainer.find_elements("xpath", "./div"): #for each subtotal in subtotals
+        for data in subtotalContainer.find_elements("xpath", "./div"): #for each subtotal in subtotals
             key = data.find_element("xpath", objectLocations["receipt"]["detailedInfoKey"]).text #get the name
             val = data.find_element("xpath", objectLocations["receipt"]["detailedInfoVal"]).text #get the value
             if "\n" in val: val = val.split("\n")[1] #if it was crossed out for whatever reason fix that

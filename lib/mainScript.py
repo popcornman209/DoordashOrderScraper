@@ -82,7 +82,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         if displayMessageMethod: displayMessageMethod("loading receipt {}/{}".format(i,len(selectedOrders))) #log progress
         log("loading receipt {}/{}".format(i,len(selectedOrders)))
         driver.get(order["link"]) #load page
-        driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainerContainer"],timeout=20) #wait for receipt to load
+        driver.wait_for_element("xpath",objectLocations["receipt"]["ordersContainer"],timeout=20) #wait for receipt to load
         log("receipt {} loaded".format(order["link"].replace("https://www.doordash.com/orders/","")))
         time.sleep(.5) #wait
 
