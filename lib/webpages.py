@@ -57,7 +57,10 @@ class historyPage:
 
                 links = []
                 for order in orders[alreadyLoaded:]:
-                    nameContainer = order.find_element("xpath", objectLocations["historyPage"]["nameContainerLocal"])
+                    try:
+                        nameContainer = order.find_element("xpath", objectLocations["historyPage"]["nameContainerLocal"])
+                    except:
+                        return False
                     nameContainerItems = nameContainer.find_elements("xpath", "./span") #container of name and group order tag
                     if len(nameContainerItems) == 3: #if group order,
                         receiptButton = order.find_element("xpath",objectLocations["historyPage"]["receiptLocal"]) #button that links to the receipt
