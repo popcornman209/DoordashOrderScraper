@@ -6,7 +6,7 @@ with open("configs/objectLocations.json","r") as f:
     objectLocations = json.load(f)
 
 class accounts:
-    def auioLogin(driver,usrname,passwd):
+    def autoLogin(driver,usrname,passwd):
         if usrname == "" or passwd == "": raise ValueError("username and password must be filled out if using auto login!") #raise error
         driver.find_element("xpath", objectLocations["login"]["email"]).send_keys(usrname) #gets email text field and types email
         log("typed email")
@@ -42,7 +42,7 @@ class accounts:
     def login(driver,autoLogin,usr,passw):
         log("reached login window...")
         if autoLogin: #if fill in email and password automatically
-            return(accounts.auioLogin(driver,usr,passw))
+            return(accounts.autoLogin(driver,usr,passw))
         else: #if not fill in email automatically
             input("press enter when logged in and on orders page")
             return True

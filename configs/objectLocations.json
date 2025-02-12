@@ -1,16 +1,16 @@
 {
     "historyPage":{
-        "ordersList": "/html/body/div[1]/div[1]/div[2]/main/main/div[3]/div[2]/div[1]",
+        "ordersList": "/html/body/div[1]/div[1]/div[2]/main/main/div/div[2]/div[1]",
         "receiptLocal": "./div/div/div/span[2]/div/div/div[1]/div[2]/a",
-        "loadMore": "/html/body/div[1]/div[1]/div[2]/main/main/div[3]/div[2]/div[2]/button",
+        "loadMore": "/html/body/div[1]/div[1]/div[2]/main/main/div/div[2]/div[2]/button",
         "nameContainerLocal": "./div/div/div/span[1]/div/a/div/div",
         "informationLocal": "./div/div/div/span[2]/div/div/div[1]/div[1]/span[1]"
     },
     "receipt":{
-        "ordersContainerContainer": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div/div[4]",
+        "ordersContainerContainer": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[2]/div[3]/div/div[1]/div/div[4]/div[2]/div[1]",
         "nameLocal": "./div[1]/span",
         "priceLocal": "./div[1]/div/div/span[2]",
-        "date": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[3]/div[1]/div[1]/div[1]/div/div[1]/span",
+        "date": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[2]/div[2]/div[1]/div[1]/div/div[1]/span",
         "detailedInfoKey": "./div[1]",
         "detailedInfoVal": "./div[2]"
     },

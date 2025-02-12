@@ -30,6 +30,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
                     driver.back() #if so go back a page (no clue why this works?)
                 time.sleep(0.25) #wait a bit to check again
 
+    time.sleep(1)
     if "identity" in driver.current_url: #if not logged in
         if displayMessageMethod:
             if accountInfo["autoLogin"]: displayMessageMethod("logging in...") #display logging ing
