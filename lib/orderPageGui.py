@@ -1,10 +1,16 @@
-import sys,json,time
+import json,os
 from lib.misc import log, BasePage
 from PySide6.QtCore import QThread, Qt, Slot, Signal, QEventLoop
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QWidget, QCheckBox, QSpinBox, QLineEdit, QScrollArea
 
 with open("configs/loginInfo.json","r") as f:
     accountInfo = json.load(f)
+
+if os.path.exists("configs/chromiumPath.txt"):
+    with open("configs/chromiumPath.txt","r") as f:
+        chromiumPath = f.read()
+else:
+    chromiumPath = None
 
 class mainScriptWorker(QThread):
     update_message_signal = Signal(tuple)  # Signal to update the message
@@ -27,6 +33,13 @@ class mainScriptWorker(QThread):
             with open("configs/loginInfo.json","w") as f: #save said changes
                 json.dump(accInfo,f)
             log("updated loginInfo.json")
+        
+        if self.orderWindow.widgets["customPath"].isChecked(): #if custom path is checked
+            with open("configs/chromiumPath.txt","w") as f: #save path
+                f.write(self.orderWindow.widgets["customPathField"].text())
+        else:
+            if os.path.exists("configs/chromiumPath.txt"):
+                os.remove("configs/chromiumPath.txt")
 
         #main script
         mScript.main(False, bHeadless, days, accountInfo=accInfo, displayMessageMethod=self.on_message_update, savePath="data/output.json",mainPageMethod=self.orderWindow.on_back, selectOrdersMethod=self.orderSelector, getOrdersMethod=self.orderWindow.selectOrdersPage.get)
@@ -48,7 +61,7 @@ class OrdersPage(BasePage):
         self.mainWorker.orderSelectorSignal.connect(self.selectOrdersPage.display) #^^
 
         main_layout = QVBoxLayout(self.page)
-
+        
         self.widgets = {
             "headLessBrowser": QCheckBox("headless (hide browser window)"), #headless browser checkbox
             "autoSelectOrders": QCheckBox("automatically select orders"), #wether to manuall select orders
@@ -58,7 +71,10 @@ class OrdersPage(BasePage):
             "emailText": QLabel("email/username:"), #email: text
             "emailField": QLineEdit(accountInfo["DDusername"]), #email field
             "passText": QLabel("password:"), #password: text
-            "passField": QLineEdit(accountInfo["DDpassword"]) #password field
+            "passField": QLineEdit(accountInfo["DDpassword"]), #password field
+            "customPath": QCheckBox("custom chromium binary"), #wether to manuall select orders
+            "customPathText": QLabel("chromium path:"), #text for following text field
+            "customPathField": QLineEdit(chromiumPath), #days in past text field
         }
         
         for widget in self.widgets:
@@ -67,6 +83,11 @@ class OrdersPage(BasePage):
         self.widgets["headLessBrowser"].setCheckState(Qt.Checked)
         self.widgets["autoSelectOrders"].stateChanged.connect(self.manualCheckBoxChanged) #toggle days in past objects when swithed
         self.manualCheckBoxChanged(False) #hide said objects
+
+        self.widgets["customPath"].stateChanged.connect(self.customPathChanged) #toggle days in past objects when swithed
+        self.widgets["customPath"].setCheckState(Qt.Checked if chromiumPath != None else Qt.Unchecked)
+        self.customPathChanged(chromiumPath != None)
+        self.widgets["customPathField"].setFixedWidth(250) #fixed width for custom path field
 
         self.widgets["daysField"].setValue(7) #sets default value for days in past
         self.widgets["daysField"].setRange(0, 364*10) #sets minimum
@@ -96,6 +117,9 @@ class OrdersPage(BasePage):
     def manualCheckBoxChanged(self,state): #toggles days field depending on wether doing it manually or not
         self.widgets["daysText"].setVisible(state)
         self.widgets["daysField"].setVisible(state)
+    def customPathChanged(self,state): #toggles days field depending on wether doing it manually or not
+        self.widgets["customPathText"].setVisible(state)
+        self.widgets["customPathField"].setVisible(state)
     def loginCheckBoxChanged(self,state): #if logging in manually, hide login info
         self.widgets["emailText"].setVisible(state)
         self.widgets["emailField"].setVisible(state)

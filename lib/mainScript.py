@@ -1,6 +1,6 @@
 from seleniumbase import Driver
 from datetime import datetime
-import time, json
+import time, json, os
 import lib.misc as misc
 import lib.webpages as wpage
 
@@ -10,12 +10,17 @@ with open("configs/objectLocations.json","r") as f: #loads xpaths and classes
 with open("configs/loginInfo.json","r") as f:
     accountInfoAuto = json.load(f)
 
-
 log = misc.log #logging method
 
 def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessageMethod=None, savePath = None, mainPageMethod=None, selectOrdersMethod=None, getOrdersMethod=None, fileType="json"): #days -1 will ask the user, should be defualt. headless means no gui
+    if os.path.exists("configs/chromiumPath.txt"):
+        with open("configs/chromiumPath.txt","r") as f:
+            chromiumPath = f.read()
+    else:
+        chromiumPath = None
+    
     if displayMessageMethod: displayMessageMethod("opening browser...")
-    driver = Driver(uc=True, headless=browserHeadless) #main driver, the browser itself
+    driver = Driver(uc=True, headless=browserHeadless, chromium_arg=chromiumPath) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
     if driver.title == "Just a moment...": #if captcha loaded
