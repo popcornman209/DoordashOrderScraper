@@ -20,7 +20,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
         chromiumPath = None
     
     if displayMessageMethod: displayMessageMethod("opening browser...")
-    driver = Driver(uc=True, headless=browserHeadless, chromium_arg=chromiumPath) #main driver, the browser itself
+    driver = Driver(uc=True, headless=browserHeadless, binary_location=chromiumPath) #main driver, the browser itself
     driver.uc_open_with_reconnect("https://www.doordash.com/orders", reconnect_time=3) #load orders page
 
     if driver.title == "Just a moment...": #if captcha loaded
