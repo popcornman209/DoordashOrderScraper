@@ -25,6 +25,7 @@ chmod a+x runMacOS.command runLinux.sh
 > [!WARNING]
 > you need chrome installed, for some reason a google meets update has broken this script.<br />
 > a solution to this is downloading ungoogled-chromium, you can tell this script to use it by putting its binary path in `configs/chromiumPath.txt` or in the orders menu in the gui.<br />
+
 to run the program with a gui, doubleclick the "runLinux" or "runMacOS" file or the below command. if runMacOS doesnt open a terminal, right click and click open with, then other. then, change "recommended applications" to all, and select applications/utilities/terminal.app.<br>
 if you want to start it in a tty instead, run:
 ```sh
