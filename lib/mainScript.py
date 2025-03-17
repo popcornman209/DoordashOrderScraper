@@ -60,7 +60,7 @@ def main(headless,browserHeadless,days,accountInfo=accountInfoAuto,displayMessag
 
         loadedOrders, alreadyLoaded = wpage.historyPage.getOrders(driver,alreadyLoaded) #get all orders on main webpage
 
-        if loadedOrders == False:
+        if not loadedOrders:
             driver.quit()
             if displayMessageMethod: displayMessageMethod("script failed!\nis there an order currently\nbeing delivered?",method=mainPageMethod)
             else: raise RuntimeError("script failed! is there an order currently being delivered?")
