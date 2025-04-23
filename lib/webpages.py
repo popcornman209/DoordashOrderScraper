@@ -88,8 +88,7 @@ class historyPage:
 
 class receiptPage:
     def getSpending(driver):
-        date = driver.find_element("xpath", objectLocations["receipt"]["date"]).text.replace(" at ",", ")
-
+        date = driver.find_element(objectLocations["receipt"]["date"]).text.replace(" at ",", ")
         ordersContainer = driver.find_element("xpath", objectLocations["receipt"]["ordersContainer"]) #gets container of each persons orders
         orders = ordersContainer.find_elements("xpath", "./div") #list of orders, last item is subtotals
 

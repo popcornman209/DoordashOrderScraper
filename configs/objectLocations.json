@@ -10,7 +10,7 @@
         "ordersContainer": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[3]/div[2]/div/div[1]/div/div[4]/div[2]/div",
         "nameLocal": "./div[1]/span",
         "priceLocal": "./div[1]/div/div/span[2]",
-        "date": "/html/body/div[1]/div[1]/div[2]/main/main/div[2]/div/div[2]/div[3]/div[1]/div[1]/div[1]/div/div[1]/span",
+        "date": "body > div.theming__Variables-sc-z2fv36-0.hKqbyW.prism-theme > div.LayerManager__ChildrenContainer-sc-1k2ulq-0.kqrlsg > div.theming__Variables-sc-z2fv36-0.crnXdC.prism-theme > main > main > div:nth-child(2) > div > div.sc-a115078b-2.iphHqx > div.sc-a115078b-3.lmcwGC > div.sc-157039db-3.dkin > div.sc-157039db-0.lfNqJG > div.sc-157039db-1.bctSsM > div > div.sc-157039db-2.gsdFzO > div > div > span",
         "detailedInfoKey": "./div[1]",
         "detailedInfoVal": "./div[2]"
     },
