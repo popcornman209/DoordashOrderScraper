@@ -1,9 +1,10 @@
 {
     "historyPage":{
         "ordersList": "/html/body/div[1]/div[1]/div[2]/main/main/div/div[2]/div[1]",
-        "receiptLocal": "./div/div/div/span[2]/div/div/div[1]/div[2]/a",
+        "receiptLocal": "./div/div/div/span[2]/div/div/div[2]/a",
         "loadMore": "/html/body/div[1]/div[1]/div[2]/main/main/div/div[2]/div[2]/button",
         "nameContainerLocal": "./div/div/div/span[1]/div/a/div/div",
+        "groupOrderContainerLocal": "./div/div/div/span[2]/div/div/div[1]/div[1]",
         "informationLocal": "./div/div/div/span[2]/div/div/div[1]/div[1]/span[1]"
     },
     "receipt":{

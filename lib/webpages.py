@@ -54,7 +54,7 @@ class historyPage:
             try:
                 parent_div = driver.find_element("xpath", objectLocations["historyPage"]["ordersList"]) #container of all orders
                 orders = parent_div.find_elements("xpath", "./div") #list of orders
-
+                
                 links = []
                 for order in orders[alreadyLoaded:]:
                     try:
@@ -62,7 +62,9 @@ class historyPage:
                     except:
                         return False
                     nameContainerItems = nameContainer.find_elements("xpath", "./span") #container of name and group order tag
-                    if len(nameContainerItems) == 3: #if group order,
+                    groupOrderContainer = order.find_element("xpath", objectLocations["historyPage"]["groupOrderContainerLocal"]) #container of group order tag
+                    grouOrderContainerItems = groupOrderContainer.find_elements("xpath", "./div") #items in group order tag
+                    if len(grouOrderContainerItems) == 2: #if group order,
                         receiptButton = order.find_element("xpath",objectLocations["historyPage"]["receiptLocal"]) #button that links to the receipt
                         link = receiptButton.get_attribute("href") #the link
 
