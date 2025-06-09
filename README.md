@@ -1,6 +1,9 @@
 # DoordashOrderScraper
 automatically collects group order history for an account over a set period, how much each person spent, and all fees cost. can export to json or csv.
 
+> [!NOTE]  
+> If the script fails for any reason, its because their website and chromium update very often and its hard to keep up. Let me know if you need to use this and its not working.
+
 ## instalation
 first, go to the location you want to install the script, and clone the repo. all files will stay in this folder, so put it somewhere nice
 ```sh
